@@ -198,9 +198,6 @@
 			isa = PBXGroup;
 			children = (
 				D00C86511FECDE05001AA4D3 /* XLCallKitHeader.pch */,
-				D00C86521FECDE7A001AA4D3 /* XLCallSeesionHead.h */,
-				D00C86501FECDCA8001AA4D3 /* XLCallCommonDefine.h */,
-				D00C865C1FECF989001AA4D3 /* XLCallColorFontDefine.h */,
 				D00C86491FECDB6D001AA4D3 /* XLCallBaseViewController.h */,
 				D00C864A1FECDB6D001AA4D3 /* XLCallBaseViewController.m */,
 			);
@@ -233,6 +230,9 @@
 			children = (
 				D00C865E1FECFC1A001AA4D3 /* XLConst.h */,
 				D00C865F1FECFC1A001AA4D3 /* XLConst.m */,
+				D00C86521FECDE7A001AA4D3 /* XLCallSeesionHead.h */,
+				D00C86501FECDCA8001AA4D3 /* XLCallCommonDefine.h */,
+				D00C865C1FECF989001AA4D3 /* XLCallColorFontDefine.h */,
 			);
 			path = const;
 			sourceTree = "<group>";
@@ -713,7 +713,7 @@
 				INFOPLIST_FILE = XMCallKit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = Facebook.XMCallKit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shumin.cn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -729,7 +729,7 @@
 				INFOPLIST_FILE = XMCallKit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = Facebook.XMCallKit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shumin.cn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
