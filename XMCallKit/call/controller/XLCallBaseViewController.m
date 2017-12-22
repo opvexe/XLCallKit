@@ -144,7 +144,6 @@
         } else if (callStatus != XLCallHangup) {
             self.minimizeButton.hidden = YES;
         }
-        // header orgin y = RCCallVerticalMargin * 3
         if (callStatus == XLCallActive) {
             [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(XLCallLabelHeight);

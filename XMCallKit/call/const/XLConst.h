@@ -11,7 +11,6 @@
 
 #import <UIKit/UIKit.h>
 
-
 /*!
  媒体类型
  */
@@ -150,9 +149,10 @@ typedef NS_ENUM(NSInteger, XLCallRenderModel) {
 };
 
 
-
+#pragma mark    < 声望 key >
 
 extern NSString * const AgoraCustomerID;                ///声望AppID
 extern NSString * const AgoraCustomerCertificate;       ///声望Certificate
 
 #endif /* XLConst_h */
+

@@ -15,16 +15,10 @@
 #import <CoreTelephony/CTCall.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <CallKit/CallKit.h>
-#import <AgoraRtcEngineKit/AgoraRtcEngineKit.h>
-
+#import <AgoraRtcEngineKit/AgoraRtcEngineKit.h>         ///AgoraRtcEngineKit 视频通话SDK
 ///第三方
 #import <Masonry.h>
 #import <MJExtension.h>
-
-///宏定义
-#import "XLCallCommonDefine.h"
-#import "XLCallColorFontDefine.h"
-
 ///CallKit
 #import "XLConst.h"
 #import "XLCallSession.h"

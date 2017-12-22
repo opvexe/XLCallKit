@@ -95,7 +95,7 @@
  @warning
  这个接口回调的错误码主要是为了提供必要的log以及提示用户，如果是不可恢复的错误，SDK会挂断电话并回调callDidDisconnect，App可以在callDidDisconnect中统一处理通话结束的逻辑。
  */
-//- (void)errorDidOccur:(RCCallErrorCode)error;
+- (void)errorDidOccur:(id)error;
 
 /*!
  当前通话网络状态的回调，该回调方法每两秒触发一次
@@ -103,6 +103,6 @@
  @param txQuality   上行网络质量
  @param rxQuality   下行网络质量
  */
-//- (void)networkTxQuality:(RCCallQuality)txQuality rxQuality:(RCCallQuality)rxQuality;
+- (void)networkTxQuality:(AgoraRtcQuality)txQuality rxQuality:(AgoraRtcQuality)rxQuality;
 
 @end

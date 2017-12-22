@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "XLCallSessionDelegate.h"
-/**
- * 通话类
+
+/*!
+ 当前的通话会话实体
  */
 
 @interface XLCallSession : NSObject

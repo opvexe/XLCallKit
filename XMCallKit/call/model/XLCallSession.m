@@ -8,6 +8,21 @@
 
 #import "XLCallSession.h"
 
+@interface XLCallSession ()<AgoraRtcEngineDelegate>
+@property(nonatomic,strong)AgoraRtcEngineKit *agoraKit;
+//@property(nonatomic,strong)AgoraAPI *agoraApi;
+@property(nonatomic,weak)id <XLCallSessionDelegate>delegate;
+@property(nonatomic,copy)NSString *userId;
+@property(nonatomic,strong)UIView *videoView;
+@property(nonatomic,assign)XLCallStatus callStatus;
+@end
 @implementation XLCallSession
+
+-(void)initWithAppId:(NSString  *)appId{
+    self.agoraKit = [AgoraRtcEngineKit sharedEngineWithAppId:appId delegate:self];
+//    self.agoraApi = [AgoraAPI getInstanceWithoutMedia:appId];
+    
+//    [self configAgoraApi];
+}
 
 @end
