@@ -1,0 +1,15 @@
+//
+//  XLCallKitHeader.pch
+//  XMCallKit
+//
+//  Created by Facebook on 2017/12/22.
+//  Copyright © 2017年 Facebook. All rights reserved.
+//
+
+#ifndef XLCallKitHeader_pch
+#define XLCallKitHeader_pch
+
+///宏定义
+#import "XLCallSeesionHead.h"
+
+#endif /* XLCallKitHeader_pch */
