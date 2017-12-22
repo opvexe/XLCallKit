@@ -70,7 +70,7 @@
  @param userId 用户ID
  @param reason 挂断的原因
  */
-- (void)remoteUserDidLeft:(NSString *)userId reason:(RCCallDisconnectReason)reason;
+- (void)remoteUserDidLeft:(NSString *)userId reason:(XLCallDisconnectReason)reason;
 
 /*!
  彩铃
