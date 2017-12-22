@@ -15,7 +15,8 @@
 #import <CoreTelephony/CTCall.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <CallKit/CallKit.h>
-#import <AgoraRtcEngineKit/AgoraRtcEngineKit.h>         ///AgoraRtcEngineKit 视频通话SDK
+#import <AgoraRtcEngineKit/AgoraRtcEngineKit.h>         ///AgoraRtcEngineKit 包含音频视频完整包
+
 ///第三方
 #import <Masonry.h>
 #import <MJExtension.h>
