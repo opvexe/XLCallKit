@@ -55,6 +55,8 @@ typedef NS_ENUM(NSInteger, XLCallStatus) {
     XLCallHangup = 5,
 };
 
+
+
 /*!
  通话结束原因
  */
@@ -126,11 +128,28 @@ typedef NS_ENUM(NSInteger, XLCallDisconnectReason) {
     XLCallDisconnectReasonAddToBlackList = 19,
 };
 
+
+
+/*!
+ 媒体录制状态
+ */
+typedef NS_ENUM(NSInteger, XLRecordingMediaType) {
+    /*!
+     开始录制
+     */
+    XLRecordingMediaStart = 1,
+    /*!
+     结束录制
+     */
+    XLRecordingMediaStop = 2,
+};
+
 #pragma mark    < 声望 key >
 
 extern NSString * const AgoraCustomerID;                ///声望AppID
 extern NSString * const AgoraCustomerCertificate;       ///声望Certificate
-extern NSString * const AgoraChannelName;               ///声望ChannelName
+extern NSString * const AgoraChannelName;               ///声望ChannelName，房间号
+extern NSString * const AgoraRecordSever;               ///录制视频的服务器地址
 
 #endif /* XLConst_h */
 

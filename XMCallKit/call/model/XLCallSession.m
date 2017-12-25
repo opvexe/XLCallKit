@@ -6,6 +6,7 @@
 //  Copyright © 2017年 Facebook. All rights reserved.
 //
 
+
 #import "XLCallSession.h"
 
 @interface XLCallSession ()<AgoraRtcEngineDelegate>
@@ -17,34 +18,95 @@
 @end
 @implementation XLCallSession
 
+
 -(void)initWithAppId:(NSString  *)appId{
     self.agoraKit = [AgoraRtcEngineKit sharedEngineWithAppId:appId delegate:self];
-    int code = [self.agoraKit joinChannelByKey:nil channelName:AgoraChannelName info:nil uid:0 joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
-        
+    [self.agoraKit joinChannelByKey:nil channelName:AgoraChannelName info:nil uid:[_userId integerValue] joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
+        NSLog(@"进入音频道成功");
     }];
-    
-    if (code !=0) {
-        NSLog(@"Join channel failed");
-    }
+}
+
+#pragma mark --- < 视频通话设置 >
+
+/**
+ *  步骤 --- 1  -->  [AgoraRtcEngineKit sharedEngineWithAppId:appId delegate:self];
+ *  步骤 ----2 ---> joinChannelByKey:nil channelName:AgoraChannelName info:nil uid:[_userId integerValue] joinSuccess: 加入频道
+ *  步骤-----3 ---> setVideoView:(UIView *)view userId:(NSString *)userId 设置视频所在的视图
+ *  步骤 ----4 ---> firstRemoteVideoDecodedOfUid 接通以后显示的操作,视频解码回调"
+ **/
+
+
+/*!
+ 设置用户所在的视频View
+ @param userId 用户ID（自己或他人）
+ @param view   视频的View
+ */
+- (void)setVideoView:(UIView *)view userId:(NSString *)userId{
+    AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
+    videoCanvas.uid = userId.intValue;
+    videoCanvas.view = view;
+    videoCanvas.renderMode = AgoraRtc_Render_Adaptive;
+    [self.agoraKit setupLocalVideo:videoCanvas];
+}
+
+/**
+ 设置用户所在的视频View
+ 
+ @param view userId 用户ID（自己或他人)
+ @param userId 视频的View
+ @param renderMode 视频显示模式 (默认为RCCallRenderModelHidden)
+ */
+- (void)setVideoView:(UIView *)view userId:(NSString *)userId renderMode:(AgoraRtcRenderMode)renderMode{
+    AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
+    videoCanvas.uid = userId.intValue;
+    videoCanvas.view = view;
+    videoCanvas.renderMode = renderMode;
+    [self.agoraKit setupLocalVideo:videoCanvas];
 }
 
 #pragma mark < AgoraRtcEngineDelegate >
-
 - (void)rtcEngine:(AgoraRtcEngineKit *)engine firstRemoteVideoDecodedOfUid:(NSUInteger)uid size: (CGSize)size elapsed:(NSInteger)elapsed {
+    NSLog(@"视频解码回调");
     AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
     videoCanvas.uid = uid;
     videoCanvas.renderMode = AgoraRtc_Render_Adaptive;
     [self.agoraKit setupRemoteVideo:videoCanvas];
 }
 
-- (void)rtcEngine:(AgoraRtcEngineKit *)engine didOfflineOfUid:(NSUInteger)uid reason:(AgoraRtcUserOfflineReason)reason {
-    
+- (void)rtcEngine:(AgoraRtcEngineKit *)engine firstLocalVideoFrameWithSize:(CGSize)size elapsed:(NSInteger)elapsed{
+    NSLog(@"获取本地视频第一帧,视频直播封面");
 }
 
-- (void)rtcEngine:(AgoraRtcEngineKit *)engine didVideoMuted:(BOOL)muted byUid:(NSUInteger)uid {
-    
-    
+- (void)rtcEngine:(AgoraRtcEngineKit *)engine didJoinedOfUid:(NSUInteger)uid elapsed:(NSInteger)elapsed{
+    NSLog(@"用户加入");
 }
+
+-(void)rtcEngine:(AgoraRtcEngineKit *)engine firstRemoteVideoFrameOfUid:(NSUInteger)uid size:(CGSize)size elapsed:(NSInteger)elapsed{
+    NSLog(@"获取远端视频第一帧");
+}
+- (void)rtcEngine:(AgoraRtcEngineKit *)engine didOfflineOfUid:(NSUInteger)uid reason:(AgoraRtcUserOfflineReason)reason {
+    [self.agoraKit leaveChannel:^(AgoraRtcStats *stat) {
+        NSLog(@"挂断成功");
+    }];
+}
+
+- (void)rtcEngine:(AgoraRtcEngineKit *)engine didApiCallExecute:(NSString*)api error:(NSInteger)error{
+    NSLog(@"录制回调:%@",api) ;
+}
+
+/**
+ * 视频录制状态
+ @param type XLRecordingMediaStart(开始录制),XLRecordingMediaStop(结束录制)
+ */
+-(void)rtcRecordingStatus:(XLRecordingMediaType)type{
+    if (type == XLRecordingMediaStart) {
+        [self.agoraKit startRecordingService:AgoraRecordSever];
+    }else{
+        [self.agoraKit stopRecordingService:AgoraRecordSever];
+    }
+}
+
+
 
 /*!
  设置通话状态变化的监听器
@@ -81,21 +143,9 @@
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         self.agoraKit = nil;
     }];
-//    [self.agoraApi channelInviteEnd:nil account:self.userId uid:0];
+    //    [self.agoraApi channelInviteEnd:nil account:self.userId uid:0];
 }
-/*!
- 设置用户所在的视频View
- 
- @param userId 用户ID（自己或他人）
- @param view   视频的View
- */
-- (void)setVideoView:(UIView *)view userId:(NSString *)userId{
-    AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
-    videoCanvas.uid = userId.intValue;
-    videoCanvas.view = view;
-    videoCanvas.renderMode = AgoraRtc_Render_Adaptive;
-    [self.agoraKit setupLocalVideo:videoCanvas];
-}
+
 
 /*!
  邀请用户加入通话
@@ -107,19 +157,7 @@
     
 }
 
-/**
- 设置用户所在的视频View
- 
- @param view userId 用户ID（自己或他人)
- @param userId 视频的View
- */
-- (void)setVideoView:(UIView *)view userId:(NSString *)userId renderMode:(AgoraRtcRenderMode)renderMode{
-    AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
-    videoCanvas.uid = userId.intValue;
-    videoCanvas.view = view;
-    videoCanvas.renderMode = renderMode;
-    [self.agoraKit setupLocalVideo:videoCanvas];
-}
+
 /*!
  更换自己使用的媒体类型
  

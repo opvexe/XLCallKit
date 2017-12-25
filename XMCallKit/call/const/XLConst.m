@@ -11,3 +11,4 @@
 NSString * const AgoraCustomerID = @"7fcf42b45e98457f815940fcd720ac36";
 NSString * const AgoraCustomerCertificate = @"80da00661c794d5bb2a60b0c5c9eb871";
 NSString * const AgoraChannelName = @"XLKP";
+NSString * const AgoraRecordSever = @"123.57.232.120:8765";

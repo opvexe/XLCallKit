@@ -23,6 +23,9 @@
 		D00C86581FECF3E2001AA4D3 /* UIImage+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C86571FECF3E2001AA4D3 /* UIImage+Category.m */; };
 		D00C865B1FECF45F001AA4D3 /* XLCallVideoUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C865A1FECF45F001AA4D3 /* XLCallVideoUtility.m */; };
 		D00C86601FECFC1A001AA4D3 /* XLConst.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C865F1FECFC1A001AA4D3 /* XLConst.m */; };
+		D00C86AA1FF0CC24001AA4D3 /* XLCallSingleCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C86A91FF0CC24001AA4D3 /* XLCallSingleCallViewController.m */; };
+		D00C86AD1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C86AC1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m */; };
+		D00C86B01FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C86AF1FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +84,12 @@
 		D00C865C1FECF989001AA4D3 /* XLCallColorFontDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLCallColorFontDefine.h; sourceTree = "<group>"; };
 		D00C865E1FECFC1A001AA4D3 /* XLConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLConst.h; sourceTree = "<group>"; };
 		D00C865F1FECFC1A001AA4D3 /* XLConst.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XLConst.m; sourceTree = "<group>"; };
+		D00C86A81FF0CC24001AA4D3 /* XLCallSingleCallViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLCallSingleCallViewController.h; sourceTree = "<group>"; };
+		D00C86A91FF0CC24001AA4D3 /* XLCallSingleCallViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XLCallSingleCallViewController.m; sourceTree = "<group>"; };
+		D00C86AB1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLCallAudioMultiCallViewController.h; sourceTree = "<group>"; };
+		D00C86AC1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XLCallAudioMultiCallViewController.m; sourceTree = "<group>"; };
+		D00C86AE1FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLCallVideoMultiCallViewController.h; sourceTree = "<group>"; };
+		D00C86AF1FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XLCallVideoMultiCallViewController.m; sourceTree = "<group>"; };
 		F804EE50568C992426261348 /* libPods-XMCallKitUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XMCallKitUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -199,6 +208,12 @@
 				D00C86511FECDE05001AA4D3 /* XLCallKitHeader.pch */,
 				D00C86491FECDB6D001AA4D3 /* XLCallBaseViewController.h */,
 				D00C864A1FECDB6D001AA4D3 /* XLCallBaseViewController.m */,
+				D00C86A81FF0CC24001AA4D3 /* XLCallSingleCallViewController.h */,
+				D00C86A91FF0CC24001AA4D3 /* XLCallSingleCallViewController.m */,
+				D00C86AB1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.h */,
+				D00C86AC1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m */,
+				D00C86AE1FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.h */,
+				D00C86AF1FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.m */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -535,10 +550,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D00C86B01FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.m in Sources */,
 				D00C864F1FECDC49001AA4D3 /* XLCallSession.m in Sources */,
 				D00C865B1FECF45F001AA4D3 /* XLCallVideoUtility.m in Sources */,
 				D00C861A1FECD74A001AA4D3 /* ViewController.m in Sources */,
+				D00C86AD1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m in Sources */,
 				D00C864B1FECDB6D001AA4D3 /* XLCallBaseViewController.m in Sources */,
+				D00C86AA1FF0CC24001AA4D3 /* XLCallSingleCallViewController.m in Sources */,
 				D00C86251FECD74A001AA4D3 /* main.m in Sources */,
 				D00C86171FECD74A001AA4D3 /* AppDelegate.m in Sources */,
 				D00C86581FECF3E2001AA4D3 /* UIImage+Category.m in Sources */,

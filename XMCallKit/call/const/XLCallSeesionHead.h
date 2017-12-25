@@ -24,6 +24,7 @@
 #import "XLConst.h"
 #import "XLCallSession.h"
 #import "XLCallVideoUtility.h"
+#import "XLCallBaseViewController.h"
 ///扩展
 #import "UIImage+Category.h"
 
