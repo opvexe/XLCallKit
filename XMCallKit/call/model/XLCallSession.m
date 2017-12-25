@@ -143,7 +143,7 @@
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         self.agoraKit = nil;
     }];
-    //    [self.agoraApi channelInviteEnd:nil account:self.userId uid:0];
+//        [self.agoraApi channelInviteEnd:nil account:self.userId uid:0];
 }
 
 

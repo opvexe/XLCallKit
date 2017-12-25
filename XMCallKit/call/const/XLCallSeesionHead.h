@@ -9,30 +9,19 @@
 #ifndef XLCallSeesionHead_h
 #define XLCallSeesionHead_h
 
-///系统库
+///系统库Agro
 #import <UIKit/UIKit.h>
-#import <AVFoundation/AVFoundation.h>
-#import <CoreTelephony/CTCall.h>
-#import <CoreTelephony/CTCallCenter.h>
 #import <CallKit/CallKit.h>
+#import <CoreTelephony/CTCall.h>
+#import <AVFoundation/AVFoundation.h>
+#import <CoreTelephony/CTCallCenter.h>
 #import <AgoraRtcEngineKit/AgoraRtcEngineKit.h>         ///AgoraRtcEngineKit 包含音频视频完整包
 
-///第三方
-#import <Masonry.h>
-#import <MJExtension.h>
 ///CallKit
 #import "XLConst.h"
 #import "XLCallSession.h"
+#import "XLCallClient.h"
 #import "XLCallVideoUtility.h"
 #import "XLCallBaseViewController.h"
-///扩展
-#import "UIImage+Category.h"
-
-
-
-
-
-
-
 
 #endif /* XLCallSeesionHead_h */

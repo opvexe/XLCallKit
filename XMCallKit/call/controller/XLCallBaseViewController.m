@@ -21,7 +21,7 @@
 -(instancetype)initWithOutgoingCallTargetId:(NSString *)targetId mediaType:(XLCallMediaType)mediaType userIdList:(NSArray *)userIdList{
     self = [super init];
     if (self) {
-        
+        _callSession = [[XLCallClient sharedXLCallClient]startTargetId:targetId to:userIdList mediaType:mediaType sessionDelegate:self];
         [self registerForegroundNotification];
     }
     return self;

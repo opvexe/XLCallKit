@@ -26,6 +26,7 @@
 		D00C86AA1FF0CC24001AA4D3 /* XLCallSingleCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C86A91FF0CC24001AA4D3 /* XLCallSingleCallViewController.m */; };
 		D00C86AD1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C86AC1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m */; };
 		D00C86B01FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C86AF1FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.m */; };
+		D00C86B41FF0E80D001AA4D3 /* XLCallClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C86B31FF0E80D001AA4D3 /* XLCallClient.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +91,9 @@
 		D00C86AC1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XLCallAudioMultiCallViewController.m; sourceTree = "<group>"; };
 		D00C86AE1FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLCallVideoMultiCallViewController.h; sourceTree = "<group>"; };
 		D00C86AF1FF0CC88001AA4D3 /* XLCallVideoMultiCallViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XLCallVideoMultiCallViewController.m; sourceTree = "<group>"; };
+		D00C86B21FF0E80D001AA4D3 /* XLCallClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLCallClient.h; sourceTree = "<group>"; };
+		D00C86B31FF0E80D001AA4D3 /* XLCallClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XLCallClient.m; sourceTree = "<group>"; };
+		D00C86B51FF0E88C001AA4D3 /* XLCallReceiveDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLCallReceiveDelegate.h; sourceTree = "<group>"; };
 		F804EE50568C992426261348 /* libPods-XMCallKitUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XMCallKitUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -205,7 +209,6 @@
 		D00C86481FECDB25001AA4D3 /* controller */ = {
 			isa = PBXGroup;
 			children = (
-				D00C86511FECDE05001AA4D3 /* XLCallKitHeader.pch */,
 				D00C86491FECDB6D001AA4D3 /* XLCallBaseViewController.h */,
 				D00C864A1FECDB6D001AA4D3 /* XLCallBaseViewController.m */,
 				D00C86A81FF0CC24001AA4D3 /* XLCallSingleCallViewController.h */,
@@ -225,6 +228,9 @@
 				D00C865A1FECF45F001AA4D3 /* XLCallVideoUtility.m */,
 				D00C864D1FECDC49001AA4D3 /* XLCallSession.h */,
 				D00C864E1FECDC49001AA4D3 /* XLCallSession.m */,
+				D00C86B21FF0E80D001AA4D3 /* XLCallClient.h */,
+				D00C86B31FF0E80D001AA4D3 /* XLCallClient.m */,
+				D00C86B51FF0E88C001AA4D3 /* XLCallReceiveDelegate.h */,
 				D00C86541FECEC9B001AA4D3 /* XLCallSessionDelegate.h */,
 			);
 			path = model;
@@ -244,6 +250,7 @@
 			children = (
 				D00C865E1FECFC1A001AA4D3 /* XLConst.h */,
 				D00C865F1FECFC1A001AA4D3 /* XLConst.m */,
+				D00C86511FECDE05001AA4D3 /* XLCallKitHeader.pch */,
 				D00C86521FECDE7A001AA4D3 /* XLCallSeesionHead.h */,
 				D00C865C1FECF989001AA4D3 /* XLCallColorFontDefine.h */,
 			);
@@ -558,6 +565,7 @@
 				D00C864B1FECDB6D001AA4D3 /* XLCallBaseViewController.m in Sources */,
 				D00C86AA1FF0CC24001AA4D3 /* XLCallSingleCallViewController.m in Sources */,
 				D00C86251FECD74A001AA4D3 /* main.m in Sources */,
+				D00C86B41FF0E80D001AA4D3 /* XLCallClient.m in Sources */,
 				D00C86171FECD74A001AA4D3 /* AppDelegate.m in Sources */,
 				D00C86581FECF3E2001AA4D3 /* UIImage+Category.m in Sources */,
 				D00C86601FECFC1A001AA4D3 /* XLConst.m in Sources */,
@@ -731,7 +739,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/call/Signa",
 				);
-				GCC_PREFIX_HEADER = "$(SRCROOT)/call/controller/XLCallKitHeader.pch";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/call/const/XLCallKitHeader.pch";
 				INFOPLIST_FILE = XMCallKit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -759,7 +767,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/call/Signa",
 				);
-				GCC_PREFIX_HEADER = "$(SRCROOT)/call/controller/XLCallKitHeader.pch";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/call/const/XLCallKitHeader.pch";
 				INFOPLIST_FILE = XMCallKit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
