@@ -124,7 +124,7 @@
  @param userId 视频的View
  @param renderMode 视频显示模式 (默认为RCCallRenderModelHidden)
  */
-- (void)setVideoView:(UIView *)view userId:(NSString *)userId renderMode:(XLCallRenderModel)renderMode;
+- (void)setVideoView:(UIView *)view userId:(NSString *)userId renderMode:(AgoraRtcRenderMode)renderMode;
 
 /*!
  更换自己使用的媒体类型

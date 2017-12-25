@@ -126,33 +126,11 @@ typedef NS_ENUM(NSInteger, XLCallDisconnectReason) {
     XLCallDisconnectReasonAddToBlackList = 19,
 };
 
-/**
- 视频显示模式
- */
-typedef NS_ENUM(NSInteger, XLCallRenderModel) {
-    
-    /*!
-     默认: 如果视频尺寸与显示视窗尺寸不一致，则视频流会按照显示视窗的比例进行周边裁剪或图像拉伸后填满视窗。
-     */
-    XLCallRenderModelHidden = 1,
-    
-    /*!
-     RenderFit: 如果视频尺寸与显示视窗尺寸不一致，在保持长宽比的前提下，将视频进行缩放后填满视窗。
-     */
-    XLCallRenderModelFit = 2,
-    
-    /*!
-     RenderAdaptive: 如果自己和对方都是竖屏，或者如果自己和对方都是横屏，使用
-     RCCallRenderModelHidden；如果对方和自己一个竖屏一个横屏，则使用RCCallRenderModelFit。
-     */
-    XLCallRenderModelAdaptive = 3,
-};
-
-
 #pragma mark    < 声望 key >
 
 extern NSString * const AgoraCustomerID;                ///声望AppID
 extern NSString * const AgoraCustomerCertificate;       ///声望Certificate
+extern NSString * const AgoraChannelName;               ///声望ChannelName
 
 #endif /* XLConst_h */
 
