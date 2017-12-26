@@ -19,10 +19,10 @@
 @implementation XLCallSession
 
 
--(void)initWithAppId:(NSString  *)appId{
-    self.agoraKit = [AgoraRtcEngineKit sharedEngineWithAppId:appId delegate:self];
-    [self.agoraKit joinChannelByKey:nil channelName:AgoraChannelName info:nil uid:[_userId integerValue] joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
-        NSLog(@"进入音频道成功");
+-(void)initWithRoomID:(NSString  *)roomID{
+    self.agoraKit = [AgoraRtcEngineKit sharedEngineWithAppId:AgoraAppID delegate:self];
+    [self.agoraKit joinChannelByKey:nil channelName:roomID info:nil uid:[_userId integerValue] joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
+        NSLog(@"进入音视频道成功");
     }];
 }
 
@@ -64,7 +64,7 @@
     [self.agoraKit setupLocalVideo:videoCanvas];
 }
 
-#pragma mark < AgoraRtcEngineDelegate >
+#pragma mark < AgoraRtcEngineDelegate 视频>
 - (void)rtcEngine:(AgoraRtcEngineKit *)engine firstRemoteVideoDecodedOfUid:(NSUInteger)uid size: (CGSize)size elapsed:(NSInteger)elapsed {
     NSLog(@"视频解码回调");
     AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
@@ -85,13 +85,29 @@
     NSLog(@"获取远端视频第一帧");
 }
 - (void)rtcEngine:(AgoraRtcEngineKit *)engine didOfflineOfUid:(NSUInteger)uid reason:(AgoraRtcUserOfflineReason)reason {
-    [self.agoraKit leaveChannel:^(AgoraRtcStats *stat) {
-        NSLog(@"挂断成功");
-    }];
+    NSLog(@"挂断成功 == 获取离开用户uid");
 }
 
 - (void)rtcEngine:(AgoraRtcEngineKit *)engine didApiCallExecute:(NSString*)api error:(NSInteger)error{
     NSLog(@"录制回调:%@",api) ;
+}
+
+#pragma mark < AgoraRtcEngineDelegate 音频>
+- (void)rtcEngineConnectionDidInterrupted:(AgoraRtcEngineKit *)engine{
+    NSLog(@"音频连接打断");
+}
+- (void)rtcEngineConnectionDidLost:(AgoraRtcEngineKit *)engine{
+    NSLog(@"Connection Lost");
+}
+- (void)rtcEngine:(AgoraRtcEngineKit *)engine didOccurError:(AgoraRtcErrorCode)errorCode{
+    NSLog(@"Occur error:%ld",(long)errorCode);
+}
+
+- (void)rtcEngine:(AgoraRtcEngineKit *)engine didJoinChannel:(NSString *)channel withUid:(NSUInteger)uid elapsed:(NSInteger) elapsed{
+    NSLog(@"Did joined channel");
+}
+- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine audioQualityOfUid:(NSUInteger)uid quality:(AgoraRtcQuality)quality delay:(NSUInteger)delay lost:(NSUInteger)lost{
+    NSLog(@"Audio Quality of uid");
 }
 
 /**
@@ -105,8 +121,6 @@
         [self.agoraKit stopRecordingService:AgoraRecordSever];
     }
 }
-
-
 
 /*!
  设置通话状态变化的监听器
@@ -143,7 +157,6 @@
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         self.agoraKit = nil;
     }];
-//        [self.agoraApi channelInviteEnd:nil account:self.userId uid:0];
 }
 
 
@@ -168,6 +181,33 @@
     return YES;
 }
 
+/*!
+ 设置摄像头状态
+ @param cameraEnabled  是否开启摄像头
+ @return               是否设置成功
+ 
+ @discussion 音频通话的默认值为NO，视频通话的默认值为YES。
+ */
+- (BOOL)setCameraEnabled:(BOOL)cameraEnabled{
+    if ( [self.agoraKit muteLocalVideoStream:cameraEnabled]==0) {
+        return YES;
+    }else{
+        return NO;
+    }
+}
+
+/*!
+ 切换前后摄像头
+ */
+- (BOOL)switchCameraMode{
+    if ([self.agoraKit switchCamera]==0) {
+        return YES;
+    }else{
+        return NO;
+    }
+}
+
+#pragma mark < 音频设置 >
 /*!
  设置静音状态
  
@@ -198,32 +238,6 @@
         return NO;
     }
 }
-/*!
- 设置摄像头状态
- @param cameraEnabled  是否开启摄像头
- @return               是否设置成功
- 
- @discussion 音频通话的默认值为NO，视频通话的默认值为YES。
- */
-- (BOOL)setCameraEnabled:(BOOL)cameraEnabled{
-    if ( [self.agoraKit muteLocalVideoStream:cameraEnabled]==0) {
-        return YES;
-    }else{
-        return NO;
-    }
-}
-
-/*!
- 切换前后摄像头
- */
-- (BOOL)switchCameraMode{
-    if ([self.agoraKit switchCamera]==0) {
-        return YES;
-    }else{
-        return NO;
-    }
-}
-
 
 @end
 

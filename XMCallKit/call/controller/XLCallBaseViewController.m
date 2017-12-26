@@ -83,6 +83,7 @@
         //结束电话
         [self callDidDisconnect];
     }
+    
     [self resetLayoutWithMediaType:self.callSession.mediaType
                         callStatus:self.callSession.callStatus];
     

@@ -145,11 +145,12 @@ typedef NS_ENUM(NSInteger, XLRecordingMediaType) {
 };
 
 #pragma mark    < 声望 key >
-
-extern NSString * const AgoraCustomerID;                ///声望AppID
-extern NSString * const AgoraCustomerCertificate;       ///声望Certificate
-extern NSString * const AgoraChannelName;               ///声望ChannelName，房间号
-extern NSString * const AgoraRecordSever;               ///录制视频的服务器地址
+extern NSString * const AgoraAppID;                     ///声网:AppID
+extern NSString * const AgoraAppCertificate;            ///声网:AppCertificate
+#pragma mark   < Agora RESTful API >
+extern NSString * const AgoraCustomerID;                ///声网:CustomerID
+extern NSString * const AgoraCustomerCertificate;       ///声网:Certificate
+extern NSString * const AgoraRecordSever;               ///声网:录制视频的服务器地址
 
 #endif /* XLConst_h */
 
