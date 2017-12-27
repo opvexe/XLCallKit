@@ -144,9 +144,10 @@ typedef NS_ENUM(NSInteger, XLRecordingMediaType) {
     XLRecordingMediaStop = 2,
 };
 
-#pragma mark    < 声望 key >
+#pragma mark    < Agora key >
 extern NSString * const AgoraAppID;                     ///声网:AppID
-extern NSString * const AgoraAppCertificate;            ///声网:AppCertificate
+extern NSString * const AgoraAppCertificate;            ///声网:AppCertificate,信令
+extern NSInteger  const AgoraEnableMediaCertificate;    
 #pragma mark   < Agora RESTful API >
 extern NSString * const AgoraCustomerID;                ///声网:CustomerID
 extern NSString * const AgoraCustomerCertificate;       ///声网:Certificate

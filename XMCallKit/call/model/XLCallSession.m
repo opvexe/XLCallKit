@@ -14,7 +14,6 @@
 @property(nonatomic,weak)id <XLCallSessionDelegate>delegate;
 @property(nonatomic,copy)NSString *userId;
 @property(nonatomic,strong)UIView *videoView;
-@property(nonatomic,assign)XLCallStatus callStatus;
 @end
 @implementation XLCallSession
 

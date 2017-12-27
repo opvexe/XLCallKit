@@ -16,6 +16,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <AgoraRtcEngineKit/AgoraRtcEngineKit.h>         ///AgoraRtcEngineKit 包含音频视频完整包
+#import <AgoraSignalKit/AgoraSignalKit.h>              ///AgoraAPI信令
 
 ///CallKit
 #import "XLConst.h"

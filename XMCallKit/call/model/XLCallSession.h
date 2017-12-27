@@ -17,7 +17,7 @@
 /*!
  通话ID
  */
-@property(nonatomic, strong, readonly) NSString *callId;
+@property(nonatomic, strong) NSString *callId;
 
 /*!
  通话的目标会话ID
@@ -37,12 +37,12 @@
 /*!
  通话的当前状态
  */
-@property(nonatomic, assign, readonly) XLCallStatus callStatus;
+@property(nonatomic, assign) XLCallStatus callStatus;
 
 /*!
  通话的最初发起人
  */
-@property(nonatomic, strong, readonly) NSString *caller;
+@property(nonatomic, strong) NSString *caller;
 
 /*!
  邀请当前用户加入通话的邀请者
@@ -62,7 +62,7 @@
 /*!
  当前用户使用的媒体类型
  */
-@property(nonatomic, assign, readonly) XLCallMediaType mediaType;
+@property(nonatomic, assign) XLCallMediaType mediaType;
 
 /*!
  通话开始的时间
@@ -70,7 +70,7 @@
  @discussion
  如果是用户呼出的通话，则startTime为通话呼出时间；如果是呼入的通话，则startTime为通话呼入时间。
  */
-@property(nonatomic, assign, readonly) long long startTime;
+@property(nonatomic, assign) long long startTime;
 
 /*!
  通话接通时间

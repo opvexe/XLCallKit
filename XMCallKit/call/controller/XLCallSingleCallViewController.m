@@ -142,7 +142,15 @@
         
         
         if (callStatus == XLCallActive) {
-            ///设置横竖屏
+            if ([self isSupportOrientation:(UIInterfaceOrientation)[UIDevice currentDevice].orientation]) {
+                [self.subVideoView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    
+                }];
+            }else{
+                [self.subVideoView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    
+                }];
+            }
             
         }else{
             self.subVideoView.hidden = YES;
@@ -162,6 +170,11 @@
     }
 }
 
+- (BOOL)isSupportOrientation:(UIInterfaceOrientation)orientation {
+    return [[UIApplication sharedApplication]
+            supportedInterfaceOrientationsForWindow:[UIApplication sharedApplication].keyWindow] &
+    (1 << orientation);
+}
 
 
 @end

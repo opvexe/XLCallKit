@@ -19,5 +19,6 @@
 
 ///扩展
 #import "UIImage+Category.h"
+#import "NSString+LSWMEXtension.h"
 
 #endif /* XLCallKitHeader_pch */

@@ -9,6 +9,10 @@
 #ifndef XLCallColorFontDefine_h
 #define XLCallColorFontDefine_h
 
+//防止循环引用
+#define WS(weakSelf)  __weak __typeof(&*self)weakSelf = self;
+#define WSSTRONG(strongSelf) __strong typeof(weakSelf) strongSelf = weakSelf;
+
 ///color
 #define ColorRandom  [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1]
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]

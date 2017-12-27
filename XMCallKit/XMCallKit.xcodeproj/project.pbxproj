@@ -60,6 +60,9 @@
 		D0115ACF1FF243F9009756E9 /* hang_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0115AB11FF243F9009756E9 /* hang_up@2x.png */; };
 		D0115AD01FF243F9009756E9 /* audio_receiver_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0115AB21FF243F9009756E9 /* audio_receiver_left@2x.png */; };
 		D0115AD11FF243F9009756E9 /* audio_receiver_up_right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0115AB31FF243F9009756E9 /* audio_receiver_up_right@2x.png */; };
+		D0115AD81FF3410C009756E9 /* XLCertificateToken.m in Sources */ = {isa = PBXBuildFile; fileRef = D0115AD71FF3410C009756E9 /* XLCertificateToken.m */; };
+		D0115ADF1FF3688E009756E9 /* AgoraSignalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0115ADD1FF3688E009756E9 /* AgoraSignalKit.framework */; };
+		D0115AE61FF370C5009756E9 /* NSString+LSWMEXtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D0115AE51FF370C5009756E9 /* NSString+LSWMEXtension.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,6 +163,11 @@
 		D0115AB11FF243F9009756E9 /* hang_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hang_up@2x.png"; sourceTree = "<group>"; };
 		D0115AB21FF243F9009756E9 /* audio_receiver_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio_receiver_left@2x.png"; sourceTree = "<group>"; };
 		D0115AB31FF243F9009756E9 /* audio_receiver_up_right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio_receiver_up_right@2x.png"; sourceTree = "<group>"; };
+		D0115AD61FF3410C009756E9 /* XLCertificateToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLCertificateToken.h; sourceTree = "<group>"; };
+		D0115AD71FF3410C009756E9 /* XLCertificateToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XLCertificateToken.m; sourceTree = "<group>"; };
+		D0115ADD1FF3688E009756E9 /* AgoraSignalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraSignalKit.framework; sourceTree = "<group>"; };
+		D0115AE41FF370C5009756E9 /* NSString+LSWMEXtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+LSWMEXtension.h"; sourceTree = "<group>"; };
+		D0115AE51FF370C5009756E9 /* NSString+LSWMEXtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LSWMEXtension.m"; sourceTree = "<group>"; };
 		F804EE50568C992426261348 /* libPods-XMCallKitUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XMCallKitUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -168,6 +176,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0115ADF1FF3688E009756E9 /* AgoraSignalKit.framework in Frameworks */,
 				9B58D38A8C6E8FA79211CD8D /* libPods-XMCallKit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,6 +273,7 @@
 		D00C86471FECDB1A001AA4D3 /* call */ = {
 			isa = PBXGroup;
 			children = (
+				D0115ADA1FF3687E009756E9 /* vendor */,
 				D0115A8B1FF2222B009756E9 /* resouce */,
 				D00C865D1FECFC04001AA4D3 /* const */,
 				D00C86551FECF3CA001AA4D3 /* category */,
@@ -297,6 +307,8 @@
 				D00C864E1FECDC49001AA4D3 /* XLCallSession.m */,
 				D00C86B21FF0E80D001AA4D3 /* XLCallClient.h */,
 				D00C86B31FF0E80D001AA4D3 /* XLCallClient.m */,
+				D0115AD61FF3410C009756E9 /* XLCertificateToken.h */,
+				D0115AD71FF3410C009756E9 /* XLCertificateToken.m */,
 				D00C86B51FF0E88C001AA4D3 /* XLCallReceiveDelegate.h */,
 				D00C86541FECEC9B001AA4D3 /* XLCallSessionDelegate.h */,
 			);
@@ -306,6 +318,8 @@
 		D00C86551FECF3CA001AA4D3 /* category */ = {
 			isa = PBXGroup;
 			children = (
+				D0115AE41FF370C5009756E9 /* NSString+LSWMEXtension.h */,
+				D0115AE51FF370C5009756E9 /* NSString+LSWMEXtension.m */,
 				D00C86561FECF3E2001AA4D3 /* UIImage+Category.h */,
 				D00C86571FECF3E2001AA4D3 /* UIImage+Category.m */,
 			);
@@ -378,6 +392,22 @@
 				D0115AA51FF243F8009756E9 /* voip_connecting.png */,
 			);
 			path = imageAssets;
+			sourceTree = "<group>";
+		};
+		D0115ADA1FF3687E009756E9 /* vendor */ = {
+			isa = PBXGroup;
+			children = (
+				D0115ADB1FF3688E009756E9 /* Signa */,
+			);
+			path = vendor;
+			sourceTree = "<group>";
+		};
+		D0115ADB1FF3688E009756E9 /* Signa */ = {
+			isa = PBXGroup;
+			children = (
+				D0115ADD1FF3688E009756E9 /* AgoraSignalKit.framework */,
+			);
+			path = Signa;
 			sourceTree = "<group>";
 		};
 		E88524F5866446AFE639B842 /* Frameworks */ = {
@@ -717,11 +747,13 @@
 				D00C864F1FECDC49001AA4D3 /* XLCallSession.m in Sources */,
 				D00C865B1FECF45F001AA4D3 /* XLCallVideoUtility.m in Sources */,
 				D00C861A1FECD74A001AA4D3 /* ViewController.m in Sources */,
+				D0115AD81FF3410C009756E9 /* XLCertificateToken.m in Sources */,
 				D00C86AD1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m in Sources */,
 				D00C864B1FECDB6D001AA4D3 /* XLCallBaseViewController.m in Sources */,
 				D00C86AA1FF0CC24001AA4D3 /* XLCallSingleCallViewController.m in Sources */,
 				D00C86251FECD74A001AA4D3 /* main.m in Sources */,
 				D00C86B41FF0E80D001AA4D3 /* XLCallClient.m in Sources */,
+				D0115AE61FF370C5009756E9 /* NSString+LSWMEXtension.m in Sources */,
 				D00C86171FECD74A001AA4D3 /* AppDelegate.m in Sources */,
 				D00C86581FECF3E2001AA4D3 /* UIImage+Category.m in Sources */,
 				D00C86601FECFC1A001AA4D3 /* XLConst.m in Sources */,
@@ -894,6 +926,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/call/Signa",
+					"$(PROJECT_DIR)/call/vendor/Signa",
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/call/const/XLCallKitHeader.pch";
 				INFOPLIST_FILE = XMCallKit/Info.plist;
@@ -902,6 +935,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/call/Signa",
+					"$(PROJECT_DIR)/call/vendor/Signa",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.shumin.cn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -922,6 +956,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/call/Signa",
+					"$(PROJECT_DIR)/call/vendor/Signa",
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/call/const/XLCallKitHeader.pch";
 				INFOPLIST_FILE = XMCallKit/Info.plist;
@@ -930,6 +965,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/call/Signa",
+					"$(PROJECT_DIR)/call/vendor/Signa",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.shumin.cn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
