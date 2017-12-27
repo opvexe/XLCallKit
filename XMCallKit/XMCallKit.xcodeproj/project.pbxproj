@@ -64,6 +64,7 @@
 		D0115ADF1FF3688E009756E9 /* AgoraSignalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0115ADD1FF3688E009756E9 /* AgoraSignalKit.framework */; };
 		D0115AE61FF370C5009756E9 /* NSString+LSWMEXtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D0115AE51FF370C5009756E9 /* NSString+LSWMEXtension.m */; };
 		D0115AE91FF37923009756E9 /* XLCall.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0115AE81FF37923009756E9 /* XLCall.mm */; };
+		D0115AF21FF37EAB009756E9 /* CallVideoKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0115AF11FF37EAB009756E9 /* CallVideoKey.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -171,6 +172,13 @@
 		D0115AE51FF370C5009756E9 /* NSString+LSWMEXtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LSWMEXtension.m"; sourceTree = "<group>"; };
 		D0115AE71FF37923009756E9 /* XLCall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLCall.h; sourceTree = "<group>"; };
 		D0115AE81FF37923009756E9 /* XLCall.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = XLCall.mm; sourceTree = "<group>"; };
+		D0115AEB1FF37E75009756E9 /* DynamicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey.h; sourceTree = "<group>"; };
+		D0115AEC1FF37E76009756E9 /* DynamicKey3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey3.h; sourceTree = "<group>"; };
+		D0115AED1FF37E76009756E9 /* DynamicKey4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey4.h; sourceTree = "<group>"; };
+		D0115AEE1FF37E76009756E9 /* DynamicKey2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey2.h; sourceTree = "<group>"; };
+		D0115AEF1FF37E76009756E9 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		D0115AF01FF37EAB009756E9 /* CallVideoKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CallVideoKey.h; sourceTree = "<group>"; };
+		D0115AF11FF37EAB009756E9 /* CallVideoKey.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CallVideoKey.mm; sourceTree = "<group>"; };
 		F804EE50568C992426261348 /* libPods-XMCallKitUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XMCallKitUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -276,6 +284,7 @@
 		D00C86471FECDB1A001AA4D3 /* call */ = {
 			isa = PBXGroup;
 			children = (
+				D0115AEA1FF37DB5009756E9 /* key */,
 				D0115ADA1FF3687E009756E9 /* vendor */,
 				D0115A8B1FF2222B009756E9 /* resouce */,
 				D00C865D1FECFC04001AA4D3 /* const */,
@@ -312,8 +321,6 @@
 				D00C864E1FECDC49001AA4D3 /* XLCallSession.m */,
 				D00C86B21FF0E80D001AA4D3 /* XLCallClient.h */,
 				D00C86B31FF0E80D001AA4D3 /* XLCallClient.m */,
-				D0115AD61FF3410C009756E9 /* XLCertificateToken.h */,
-				D0115AD71FF3410C009756E9 /* XLCertificateToken.m */,
 				D00C86B51FF0E88C001AA4D3 /* XLCallReceiveDelegate.h */,
 				D00C86541FECEC9B001AA4D3 /* XLCallSessionDelegate.h */,
 			);
@@ -413,6 +420,22 @@
 				D0115ADD1FF3688E009756E9 /* AgoraSignalKit.framework */,
 			);
 			path = Signa;
+			sourceTree = "<group>";
+		};
+		D0115AEA1FF37DB5009756E9 /* key */ = {
+			isa = PBXGroup;
+			children = (
+				D0115AEB1FF37E75009756E9 /* DynamicKey.h */,
+				D0115AEE1FF37E76009756E9 /* DynamicKey2.h */,
+				D0115AEC1FF37E76009756E9 /* DynamicKey3.h */,
+				D0115AED1FF37E76009756E9 /* DynamicKey4.h */,
+				D0115AEF1FF37E76009756E9 /* utils.h */,
+				D0115AF01FF37EAB009756E9 /* CallVideoKey.h */,
+				D0115AF11FF37EAB009756E9 /* CallVideoKey.mm */,
+				D0115AD61FF3410C009756E9 /* XLCertificateToken.h */,
+				D0115AD71FF3410C009756E9 /* XLCertificateToken.m */,
+			);
+			path = key;
 			sourceTree = "<group>";
 		};
 		E88524F5866446AFE639B842 /* Frameworks */ = {
@@ -753,6 +776,7 @@
 				D00C865B1FECF45F001AA4D3 /* XLCallVideoUtility.m in Sources */,
 				D00C861A1FECD74A001AA4D3 /* ViewController.m in Sources */,
 				D0115AD81FF3410C009756E9 /* XLCertificateToken.m in Sources */,
+				D0115AF21FF37EAB009756E9 /* CallVideoKey.mm in Sources */,
 				D00C86AD1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m in Sources */,
 				D00C864B1FECDB6D001AA4D3 /* XLCallBaseViewController.m in Sources */,
 				D00C86AA1FF0CC24001AA4D3 /* XLCallSingleCallViewController.m in Sources */,

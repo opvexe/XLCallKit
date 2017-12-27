@@ -34,5 +34,19 @@
     return output;
 }
 
++(NSString *)CreateMediaKeyByChannelName:(NSString *)channelName Uid:(uint32_t)uid{
+    unsigned expiredTime = (unsigned) [[NSDate date] timeIntervalSince1970] + 3600;
+    __block NSString *key;
+    if (AgoraEnableMediaCertificate) {
+        key = [CallVideoKey createMediaKeyByAppID:AgoraAppID
+                                   appCertificate:AgoraAppCertificate
+                                      channelName:channelName
+                                           unixTs:time(NULL)
+                                        randomInt:(rand()%256 << 24) + (rand()%256 << 16) + (rand()%256 << 8) + (rand()%256)
+                                              uid:uid
+                                        expiredTs:expiredTime];
+    }
+    return key;
+}
 @end
 

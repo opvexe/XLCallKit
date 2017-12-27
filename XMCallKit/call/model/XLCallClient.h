@@ -10,7 +10,7 @@
 #import "XLCallReceiveDelegate.h"
 
 /*!
- * Call核心类
+ * 全局通话呼入的监听器
  */
 @interface XLCallClient : NSObject
 

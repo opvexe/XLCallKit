@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 /**
  *  信令签名 Signaling Key
  */
@@ -30,5 +29,15 @@
  @return Signaling Key
  */
 + (NSString *)SignalingKeyByAppId: (NSString *) appId Certificate:(NSString *)certificate Account:(NSString*)account ExpiredTime:(unsigned)expiredTime;
+
+
+/**
+ * 获取视频频道key
+
+ @param channelName channelID
+ @param uid  客户端定义的用户账号
+ @return return key
+ */
++(NSString *)CreateMediaKeyByChannelName:(NSString *)channelName Uid:(uint32_t)uid;
 
 @end
