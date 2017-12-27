@@ -8,7 +8,7 @@
 
 
 #import "XLCallSession.h"
-
+#import "XLEncryptionType.h"
 @interface XLCallSession ()<AgoraRtcEngineDelegate>
 @property(nonatomic,strong)AgoraRtcEngineKit *agoraKit;
 @property(nonatomic,weak)id <XLCallSessionDelegate>delegate;
@@ -17,24 +17,29 @@
 @end
 @implementation XLCallSession
 
+static NSInteger streamID = 0;
 
--(void)initWithRoomID:(NSString  *)roomID{
+-(void)initWithRoomID:(NSString  *)roomID{          ///音频
     self.agoraKit = [AgoraRtcEngineKit sharedEngineWithAppId:AgoraAppID delegate:self];
     [self.agoraKit joinChannelByKey:nil channelName:roomID info:nil uid:[_userId integerValue] joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
         NSLog(@"进入音视频道成功");
     }];
 }
 
+-(void)initWithAgoraMediaSDK:(NSString *)roomID{      //视频
+    self.agoraKit = [AgoraRtcEngineKit sharedEngineWithAppId:AgoraAppID delegate:self];
+    [self.agoraKit setChannelProfile:AgoraRtc_ChannelProfile_Communication];
+    [self.agoraKit enableVideo];
+    [self.agoraKit setEncryptionMode:[XLEncryptionType modeStringWithEncrypType:[[XLEncryptionType encrypTypeArray][0] intValue]]];
+    [self.agoraKit setEncryptionSecret:AgoraEncrypSecret];
+    [self.agoraKit createDataStream:&streamID reliable:YES ordered:YES];
+    [self.agoraKit startPreview];
+    [self.agoraKit joinChannelByKey:nil channelName:roomID info:nil uid:[_userId integerValue] joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
+        NSLog(@"进入视频道成功");
+    }];
+}
+
 #pragma mark --- < 视频通话设置 >
-
-/**
- *  步骤 --- 1  -->  [AgoraRtcEngineKit sharedEngineWithAppId:appId delegate:self];
- *  步骤 ----2 ---> joinChannelByKey:nil channelName:AgoraChannelName info:nil uid:[_userId integerValue] joinSuccess: 加入频道
- *  步骤-----3 ---> setVideoView:(UIView *)view userId:(NSString *)userId 设置视频所在的视图
- *  步骤 ----4 ---> firstRemoteVideoDecodedOfUid 接通以后显示的操作,视频解码回调"
- **/
-
-
 /*!
  设置用户所在的视频View
  @param userId 用户ID（自己或他人）
@@ -91,6 +96,13 @@
     NSLog(@"录制回调:%@",api) ;
 }
 
+- (void)rtcEngine:(AgoraRtcEngineKit *)engine didVideoMuted:(BOOL)muted byUid:(NSUInteger)uid {
+    NSLog(@"video muted");
+}
+-(void)rtcEngine:(AgoraRtcEngineKit *)engine receiveStreamMessageFromUid:(NSUInteger)uid streamId:(NSInteger)streamId data:(NSData *)data {
+    NSString *message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(@"接收到消息%@",message);
+}
 #pragma mark < AgoraRtcEngineDelegate 音频>
 - (void)rtcEngineConnectionDidInterrupted:(AgoraRtcEngineKit *)engine{
     NSLog(@"音频连接打断");
@@ -204,6 +216,14 @@
     }else{
         return NO;
     }
+}
+
+/**
+ * 设置本地视频属性，可用此接口设置本地视频分辨率。
+ 
+ **/
+- (void)setVideoProfile:(AgoraRtcVideoProfile)profile{
+    [self.agoraKit setVideoProfile:profile swapWidthAndHeight:NO];
 }
 
 #pragma mark < 音频设置 >

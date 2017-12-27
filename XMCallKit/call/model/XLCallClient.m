@@ -9,7 +9,7 @@
 #import "XLCallClient.h"
 #import "XLCertificateToken.h"
 
-@interface XLCallClient()<AgoraRtcEngineDelegate,AgoraRtcEngineDelegate>
+@interface XLCallClient()
 @property(nonatomic,strong)AgoraAPI *callAgoraApi;
 @property(nonatomic, strong)XLCallSession *currentCallSession;
 @property (nonatomic,weak)id<XLCallReceiveDelegate>delegate;
@@ -216,6 +216,7 @@
     [model setDelegate:delegate];
     return model;
 }
+
 
 /*!
  设置全局通话呼入的监听器

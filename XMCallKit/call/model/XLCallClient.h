@@ -44,8 +44,8 @@
  @return 呼出的通话实体
  */
 - (XLCallSession *)startTargetId:(NSString *)targetId
-                          to:(NSArray *)userIdList
-                   mediaType:(XLCallMediaType)type
+                              to:(NSArray *)userIdList
+                       mediaType:(XLCallMediaType)type
                  sessionDelegate:(id<XLCallSessionDelegate>)delegate;
 
 /*!

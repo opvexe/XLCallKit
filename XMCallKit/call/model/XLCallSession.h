@@ -186,4 +186,17 @@
  */
 - (BOOL)switchCameraMode;
 
+/**
+ * 设置本地视频属性，可用此接口设置本地视频分辨率。  ///默认 AgoraRtc_VideoProfile_360P
+ *
+ { @(AgoraRtc_VideoProfile_120P),
+ @(AgoraRtc_VideoProfile_180P),
+ @(AgoraRtc_VideoProfile_240P),
+ @(AgoraRtc_VideoProfile_360P),
+ @(AgoraRtc_VideoProfile_480P),
+ @(AgoraRtc_VideoProfile_720P)]; }
+ * @param profile profile
+ */
+- (void)setVideoProfile:(AgoraRtcVideoProfile)profile;
+
 @end
