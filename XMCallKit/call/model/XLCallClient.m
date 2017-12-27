@@ -35,6 +35,8 @@
     }
     return self;
 }
+
+///初始化信令
 -(void)initCallAgoraApi{
     self.callAgoraApi = [AgoraAPI getInstanceWithoutMedia:AgoraAppID];
     [self callAgoraApiCallBlock];

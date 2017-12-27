@@ -9,7 +9,7 @@
 #ifndef XLCallSeesionHead_h
 #define XLCallSeesionHead_h
 
-///系统库Agro
+///声网Agora
 #import <UIKit/UIKit.h>
 #import <CallKit/CallKit.h>
 #import <CoreTelephony/CTCall.h>

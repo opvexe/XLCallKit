@@ -63,6 +63,7 @@
 		D0115AD81FF3410C009756E9 /* XLCertificateToken.m in Sources */ = {isa = PBXBuildFile; fileRef = D0115AD71FF3410C009756E9 /* XLCertificateToken.m */; };
 		D0115ADF1FF3688E009756E9 /* AgoraSignalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0115ADD1FF3688E009756E9 /* AgoraSignalKit.framework */; };
 		D0115AE61FF370C5009756E9 /* NSString+LSWMEXtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D0115AE51FF370C5009756E9 /* NSString+LSWMEXtension.m */; };
+		D0115AE91FF37923009756E9 /* XLCall.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0115AE81FF37923009756E9 /* XLCall.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -168,6 +169,8 @@
 		D0115ADD1FF3688E009756E9 /* AgoraSignalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraSignalKit.framework; sourceTree = "<group>"; };
 		D0115AE41FF370C5009756E9 /* NSString+LSWMEXtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+LSWMEXtension.h"; sourceTree = "<group>"; };
 		D0115AE51FF370C5009756E9 /* NSString+LSWMEXtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LSWMEXtension.m"; sourceTree = "<group>"; };
+		D0115AE71FF37923009756E9 /* XLCall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLCall.h; sourceTree = "<group>"; };
+		D0115AE81FF37923009756E9 /* XLCall.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = XLCall.mm; sourceTree = "<group>"; };
 		F804EE50568C992426261348 /* libPods-XMCallKitUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XMCallKitUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -301,6 +304,8 @@
 		D00C864C1FECDC34001AA4D3 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				D0115AE71FF37923009756E9 /* XLCall.h */,
+				D0115AE81FF37923009756E9 /* XLCall.mm */,
 				D00C86591FECF45F001AA4D3 /* XLCallVideoUtility.h */,
 				D00C865A1FECF45F001AA4D3 /* XLCallVideoUtility.m */,
 				D00C864D1FECDC49001AA4D3 /* XLCallSession.h */,
@@ -751,6 +756,7 @@
 				D00C86AD1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m in Sources */,
 				D00C864B1FECDB6D001AA4D3 /* XLCallBaseViewController.m in Sources */,
 				D00C86AA1FF0CC24001AA4D3 /* XLCallSingleCallViewController.m in Sources */,
+				D0115AE91FF37923009756E9 /* XLCall.mm in Sources */,
 				D00C86251FECD74A001AA4D3 /* main.m in Sources */,
 				D00C86B41FF0E80D001AA4D3 /* XLCallClient.m in Sources */,
 				D0115AE61FF370C5009756E9 /* NSString+LSWMEXtension.m in Sources */,

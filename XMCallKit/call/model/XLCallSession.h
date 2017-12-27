@@ -22,7 +22,7 @@
 /*!
  通话的目标会话ID
  */
-@property(nonatomic, strong, readonly) NSString *targetId;
+@property(nonatomic, strong) NSString *targetId;
 
 /*!
  是否是多方通话
@@ -32,7 +32,7 @@
 /*!
  通话的扩展信息
  */
-@property(nonatomic, strong, readonly) NSString *extra;
+@property(nonatomic, strong) NSString *extra;
 
 /*!
  通话的当前状态
@@ -75,7 +75,7 @@
 /*!
  通话接通时间
  */
-@property(nonatomic, assign, readonly) long long connectedTime;
+@property(nonatomic, assign) long long connectedTime;
 
 /*!
  通话挂断原因
