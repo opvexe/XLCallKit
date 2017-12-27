@@ -52,7 +52,7 @@
 /*!
  当前的用户列表
  */
-@property(nonatomic, strong, readonly) NSArray *userProfileList;
+@property(nonatomic, strong) NSArray *userProfileList;
 
 /*!
  自己的状态

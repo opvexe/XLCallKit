@@ -35,17 +35,4 @@
                               userIdList:(NSArray *)userIdList
                                 userDict:(NSDictionary *)userDict;
 
-/*!
- 接收到取消通话的远程通知的回调
- 
- @param callId        呼入通话的唯一值
- @param inviterUserId 通话邀请者的UserId
- @param mediaType     通话的媒体类型
- @param userIdList    被邀请者的UserId列表
- */
-- (void)didCancelCallRemoteNotification:(NSString *)callId
-                          inviterUserId:(NSString *)inviterUserId
-                              mediaType:(XLCallMediaType)mediaType
-                             userIdList:(NSArray *)userIdList;
-
 @end

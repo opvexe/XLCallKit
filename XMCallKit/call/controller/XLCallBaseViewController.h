@@ -115,6 +115,14 @@
                                    mediaType:(XLCallMediaType)mediaType
                                   userIdList:(NSArray *)userIdList;
 
+/*!
+ 初始化呼入的ViewController
+ 
+ @param callSession 呼入的通话实体
+ 
+ @return ViewController
+ */
+- (instancetype)initWithIncomingCall:(XLCallSession *)callSession;
 
 #pragma mark  < 回调 >
 /*!

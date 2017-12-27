@@ -12,6 +12,6 @@
  多人音频ViewController
  */
 
-@interface XLCallAudioMultiCallViewController : UIViewController
+@interface XLCallAudioMultiCallViewController : XLCallBaseViewController
 
 @end

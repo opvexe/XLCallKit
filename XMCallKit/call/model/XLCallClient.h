@@ -34,6 +34,21 @@
 - (void)setDelegate:(id<XLCallReceiveDelegate>)delegate;
 
 /*!
+ 发起一个通话
+ 
+ @param targetId         目标会话ID
+ @param userIdList       邀请的用户ID列表
+ @param type             发起的通话媒体类型
+ @param delegate         通话监听
+ 
+ @return 呼出的通话实体
+ */
+- (XLCallSession *)startTargetId:(NSString *)targetId
+                          to:(NSArray *)userIdList
+                   mediaType:(XLCallMediaType)type
+                 sessionDelegate:(id<XLCallSessionDelegate>)delegate;
+
+/*!
  当前的通话会话实体
  */
 @property(nonatomic, strong, readonly) XLCallSession *currentCallSession;

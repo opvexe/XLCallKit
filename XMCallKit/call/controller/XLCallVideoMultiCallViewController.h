@@ -11,6 +11,6 @@
 /*!
  多人视频ViewController
  */
-@interface XLCallVideoMultiCallViewController : UIViewController
+@interface XLCallVideoMultiCallViewController : XLCallBaseViewController
 
 @end
