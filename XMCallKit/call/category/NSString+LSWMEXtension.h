@@ -1,10 +1,3 @@
-//
-//  NSString+LSWMEXtension.h
-//  WithMusic
-//
-//  Created by TSM on 2017/11/30.
-//  Copyright © 2017年 TSM. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 
@@ -42,10 +35,10 @@ NSString *convertToString(id object);
  *  字符串显示两种颜色
  *
  *  @param string         string description
- *  @param myColor        <#myColor description#>
- *  @param originalString <#originalString description#>
+ *  @param myColor        myColor description
+ *  @param originalString originalString description
  *
- *  @return <#return value description#>
+ *  @return return value description
  */
 +(NSMutableAttributedString *)getOtherColorString:(NSString *)string Color:(UIColor *)myColor withString:(NSString *)originalString;
 /**
@@ -87,9 +80,7 @@ NSString *base64DecodeWith(NSString * content);
 
 - (CGSize)sizeWithFont:(UIFont *)font;
 
-
 NSString *defaultValueContent(NSString * content ,NSString * defaultValue);
-
 
 NSString* md5(NSString* input);
 
@@ -101,3 +92,4 @@ BOOL removeItemAtPath(NSString *filePath);
 
 +(NSString *)timeFormatted:(int)totalSeconds;
 @end
+

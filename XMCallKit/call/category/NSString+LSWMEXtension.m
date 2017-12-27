@@ -1,10 +1,3 @@
-//
-//  NSString+LSWMEXtension.m
-//  WithMusic
-//
-//  Created by TSM on 2017/11/30.
-//  Copyright © 2017年 TSM. All rights reserved.
-//
 
 #import "NSString+LSWMEXtension.h"
 #import <CommonCrypto/CommonDigest.h>
@@ -346,3 +339,4 @@ NSString *base64DecodeWith(NSString * content){
     return [NSString stringWithFormat:@"%02d:%02d:%02d", hours, minutes, seconds];
 }
 @end
+
