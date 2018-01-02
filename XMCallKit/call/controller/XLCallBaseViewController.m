@@ -769,5 +769,8 @@
     return _cameraCloseButton;
 }
 
+-(void)dealloc{
+    NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
+}
 @end
 
