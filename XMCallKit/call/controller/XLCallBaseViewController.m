@@ -18,6 +18,20 @@
 
 @implementation XLCallBaseViewController
 
+/**
+ * 获取会话对象，类型
+ 
+ @return return value description
+ */
+- (NSString *)targetId {
+    return self.callSession.targetId;
+}
+
+- (XLCallMediaType)mediaType {
+    return self.callSession.mediaType;
+}
+
+
 - (instancetype)initWithIncomingCall:(XLCallSession *)callSession {
     self = [super init];
     if (self) {
@@ -38,18 +52,11 @@
 }
 
 
-/**
- * 视图消失
- 
- @param animated animated description
- */
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
 }
-/**
- * 视图加载
- */
+
 -(void)viewDidLoad{
     [super viewDidLoad];
     self.backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -101,57 +108,99 @@
     [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:self.callSession.callStatus];
 }
 
-
-/**
- * 获取会话对象，类型
- 
- @return return value description
- */
-- (NSString *)targetId {
-    return self.callSession.targetId;
-}
-
-- (XLCallMediaType)mediaType {
-    return self.callSession.mediaType;
-}
-
-#pragma mark PublicFunciton
-/*!
- 通话即将接通
- */
-- (void)callWillConnect{
+#pragma mark ===========================================    <PrivateFunciton>  ===========================================
+- (void)layoutTextUnderImageButton:(UIButton *)button {
+    [button.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
+    button.titleEdgeInsets = UIEdgeInsetsMake(0, -button.imageView.frame.size.width,
+                                              -button.imageView.frame.size.height - LSWMCallInsideMargin, 0);
+    button.imageEdgeInsets = UIEdgeInsetsMake(-button.titleLabel.intrinsicContentSize.height - LSWMCallInsideMargin, 0, 0,
+                                              -button.titleLabel.intrinsicContentSize.width);
 }
-/*!
- 通话即将挂断
- */
-- (void)callWillDisconnect{
-    
+- (void)registerTelephonyEvent {
+    self.callCenter = [[CTCallCenter alloc] init];
+    __weak __typeof(self) weakSelf = self;
+    self.callCenter.callEventHandler = ^(CTCall *call) {
+        if ([call.callState isEqualToString:CTCallStateConnected]) {
+            [weakSelf.callSession hangup];
+        }
+    };
 }
 
-/*!
- 结束通话
- */
--(void)callDidDisconnect{
-    [self callWillDisconnect];
-    [XLCallVideoUtility clearCallIdleTimerDisableds];
-    if (self.callSession.connectedTime > 0) {
-        self.tipsLabel.text =@"通话结束";
+- (void)addProximityMonitoringObserver {
+    [UIDevice currentDevice].proximityMonitoringEnabled = YES;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(proximityStatueChanged:)
+                                                 name:UIDeviceProximityStateDidChangeNotification
+                                               object:nil];
+}
+- (void)removeProximityMonitoringObserver {
+    [UIDevice currentDevice].proximityMonitoringEnabled = NO;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIDeviceProximityStateDidChangeNotification
+                                                  object:nil];
+}
+- (void)proximityStatueChanged:(NSNotificationCenter *)notification {
+    if ([UIDevice currentDevice].proximityState) {
+        [[AVAudioSession sharedInstance]
+         setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     } else {
-        self.tipsLabel.text =
-        [XLCallVideoUtility getReadableStringForCallViewController:self.callSession.disconnectReason];
+        [[AVAudioSession sharedInstance]
+         setCategory:AVAudioSessionCategoryPlayback error:nil];
     }
-    self.tipsLabel.textColor = [UIColor whiteColor];
-    
-    [self stopActiveTimer];
-    [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:self.callSession.callStatus];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        
-    });
-
-    [self removeProximityMonitoringObserver];
 }
+
+- (void)registerForegroundNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (void)appDidBecomeActive {
+    if (self.needPlayingAlertAfterForeground) {
+        [self shouldAlertForWaitingRemoteResponse];
+    } else if (self.needPlayingRingAfterForeground) {
+        [self shouldRingForIncomingCall];
+    }
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)startPlayRing:(NSString *)ringPath {
+    if (ringPath) {
+        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+        //默认情况下扬声器播放
+        [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+        [audioSession setActive:YES error:nil];
+        
+        if (self.audioPlayer) {
+            [self stopPlayRing];
+        }
+        
+        NSURL *url = [NSURL URLWithString:ringPath];
+        NSError *error = nil;
+        self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+        if (!error) {
+            self.audioPlayer.numberOfLoops = -1;
+            self.audioPlayer.volume = 1.0;
+            [self.audioPlayer prepareToPlay];
+            [self.audioPlayer play];
+        }
+    }
+}
+
+
+- (void)stopPlayRing {
+    if (self.audioPlayer) {
+        [self.audioPlayer stop];
+        self.audioPlayer = nil;
+    }
+}
+
+
 /*!
  重新Layout布局
  
@@ -605,128 +654,7 @@
     }
 }
 
-#pragma mark PrivateFunciton
-- (void)layoutTextUnderImageButton:(UIButton *)button {
-    [button.titleLabel setFont:[UIFont systemFontOfSize:12]];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    button.titleEdgeInsets = UIEdgeInsetsMake(0, -button.imageView.frame.size.width,
-                                              -button.imageView.frame.size.height - LSWMCallInsideMargin, 0);
-    button.imageEdgeInsets = UIEdgeInsetsMake(-button.titleLabel.intrinsicContentSize.height - LSWMCallInsideMargin, 0, 0,
-                                              -button.titleLabel.intrinsicContentSize.width);
-}
-- (void)registerTelephonyEvent {
-    self.callCenter = [[CTCallCenter alloc] init];
-    __weak __typeof(self) weakSelf = self;
-    self.callCenter.callEventHandler = ^(CTCall *call) {
-        if ([call.callState isEqualToString:CTCallStateConnected]) {
-            [weakSelf.callSession hangup];
-        }
-    };
-}
-
-- (void)addProximityMonitoringObserver {
-    [UIDevice currentDevice].proximityMonitoringEnabled = YES;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(proximityStatueChanged:)
-                                                 name:UIDeviceProximityStateDidChangeNotification
-                                               object:nil];
-}
-- (void)removeProximityMonitoringObserver {
-    [UIDevice currentDevice].proximityMonitoringEnabled = NO;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIDeviceProximityStateDidChangeNotification
-                                                  object:nil];
-}
-- (void)proximityStatueChanged:(NSNotificationCenter *)notification {
-    if ([UIDevice currentDevice].proximityState) {
-        [[AVAudioSession sharedInstance]
-         setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
-    } else {
-        [[AVAudioSession sharedInstance]
-         setCategory:AVAudioSessionCategoryPlayback error:nil];
-    }
-}
-
-- (void)registerForegroundNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-}
-
-- (void)appDidBecomeActive {
-    if (self.needPlayingAlertAfterForeground) {
-        [self shouldAlertForWaitingRemoteResponse];
-    } else if (self.needPlayingRingAfterForeground) {
-        [self shouldRingForIncomingCall];
-    }
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-
-- (void)shouldAlertForWaitingRemoteResponse {
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-        NSString *ringPath = [[NSBundle mainBundle] pathForResource:@"voip_calling_ring" ofType:@"mp3"];
-        [self startPlayRing:ringPath];
-        self.needPlayingAlertAfterForeground = NO;
-    } else {
-        self.needPlayingAlertAfterForeground = YES;
-    }
-}
-/*!
- 收到电话，可以播放铃声
- */
-- (void)shouldRingForIncomingCall {
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-        NSString *ringPath = [[NSBundle mainBundle] pathForResource:@"voip_call.mp3" ofType:@"mp3"];
-        [self startPlayRing:ringPath];
-        self.needPlayingRingAfterForeground = NO;
-    } else {
-        self.needPlayingRingAfterForeground = YES;
-    }
-}
-- (void)startPlayRing:(NSString *)ringPath {
-    if (ringPath) {
-        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        //默认情况下扬声器播放
-        [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
-        [audioSession setActive:YES error:nil];
-        
-        if (self.audioPlayer) {
-            [self stopPlayRing];
-        }
-        
-        NSURL *url = [NSURL URLWithString:ringPath];
-        NSError *error = nil;
-        self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
-        if (!error) {
-            self.audioPlayer.numberOfLoops = -1;
-            self.audioPlayer.volume = 1.0;
-            [self.audioPlayer prepareToPlay];
-            [self.audioPlayer play];
-        }
-    }
-}
-/*!
- 停止播放铃声(通话接通或挂断)
- */
-- (void)shouldStopAlertAndRing {
-    self.needPlayingRingAfterForeground = NO;
-    self.needPlayingAlertAfterForeground = NO;
-    [self stopPlayRing];
-}
-
-- (void)stopPlayRing {
-    if (self.audioPlayer) {
-        [self.audioPlayer stop];
-        self.audioPlayer = nil;
-    }
-}
-
-
+#pragma mark  =========================================         <定时器开始计时>              =========================================================
 - (void)startActiveTimer {
     self.activeTimer = [NSTimer scheduledTimerWithTimeInterval:1
                                                         target:self
@@ -745,7 +673,7 @@
     self.timeLabel.text = [XLCallVideoUtility getTalkTimeStringForTime:100000];
 }
 
-
+#pragma mark  ===========================================              <懒加载控件>              ========================================================
 - (UIButton *)minimizeButton {
     if (!_minimizeButton) {
         _minimizeButton =[UIButton buttonWithType:UIButtonTypeCustom];
@@ -965,38 +893,255 @@
     return _cameraSwitchButton;
 }
 
+#pragma mark  ================================================       <XLCallSessionDelegate>               ================================================
 
-#pragma TargetAction
+/*!
+ 通话已接通
+ */
+- (void)callDidConnect{
+    [self callWillConnect];
+    self.tipsLabel.text = @"";
+    [self startActiveTimer];
+    [self resetLayout:self.callSession.isMultiCall
+            mediaType:self.callSession.mediaType
+           callStatus:self.callSession.callStatus];
+}
+
+/*!
+ 结束通话
+ */
+-(void)callDidDisconnect{
+    [self callWillDisconnect];
+    [XLCallVideoUtility clearCallIdleTimerDisableds];
+    if (self.callSession.connectedTime > 0) {
+        self.tipsLabel.text =@"通话结束";
+    } else {
+        self.tipsLabel.text =
+        [XLCallVideoUtility getReadableStringForCallViewController:self.callSession.disconnectReason];
+    }
+    self.tipsLabel.textColor = [UIColor whiteColor];
+    
+    [self stopActiveTimer];
+    [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:self.callSession.callStatus];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[XLCall sharedXLCall]dismissCallViewController:self];
+    });
+    
+    [self removeProximityMonitoringObserver];
+}
+
+/*!
+ 对端正在振铃
+ 
+ @param userId 对端的用户ID
+ */
+- (void)remoteUserDidRing:(NSString *)userId {
+    [self resetLayout:self.callSession.isMultiCall
+            mediaType:self.callSession.mediaType
+           callStatus:self.callSession.callStatus];
+}
+
+/*!
+ 有用户被邀请加入通话
+ 
+ @param userId    被邀请的用户ID
+ @param mediaType 希望被邀请者选择的媒体类型
+ */
+- (void)remoteUserDidInvite:(NSString *)userId mediaType:(XLCallMediaType)mediaType {
+    [self resetLayout:self.callSession.isMultiCall
+            mediaType:self.callSession.mediaType
+           callStatus:self.callSession.callStatus];
+}
+
+
+/*!
+ 有用户加入了通话
+ 
+ @param userId    用户ID
+ @param mediaType 用户的媒体类型
+ */
+- (void)remoteUserDidJoin:(NSString *)userId mediaType:(XLCallMediaType)mediaType {
+    [self resetLayout:self.callSession.isMultiCall
+            mediaType:self.callSession.mediaType
+           callStatus:self.callSession.callStatus];
+}
+
+/*!
+ 有用户切换了媒体类型
+ 
+ @param userId    用户ID
+ @param mediaType 切换至的媒体类型
+ */
+- (void)remoteUserDidChangeMediaType:(NSString *)userId mediaType:(XLCallMediaType)mediaType {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!self.callSession.isMultiCall) {
+            if (mediaType == XLCallMediaAudio && self.callSession.mediaType != XLCallMediaAudio) {
+                if ([self.callSession changeMediaType:XLCallMediaAudio]) {
+                    [self.callSession setVideoView:nil userId:[[XLUserInfoCacheManager getUser]userId]];
+                    [self.callSession setVideoView:nil userId:self.callSession.targetId];
+                    [self resetLayout:self.callSession.isMultiCall
+                            mediaType:XLCallMediaAudio
+                           callStatus:self.callSession.callStatus];
+                }
+            }
+        } else if (self.callSession.mediaType == mediaType && mediaType == XLCallMediaVideo) {
+            [self remoteUserDidDisableCamera:NO byUser:userId];
+        }
+    });
+}
+
+/*!
+ 对端用户关闭/打开了摄像头
+ 
+ @param userId    用户ID
+ @param muted     是否关闭camera
+ */
+- (void)remoteUserDidDisableCamera:(BOOL)muted byUser:(NSString *)userId {
+    [self resetLayout:self.callSession.isMultiCall
+            mediaType:self.callSession.mediaType
+           callStatus:self.callSession.callStatus];
+}
+
+/*!
+ 有用户挂断
+ 
+ @param userId 用户ID
+ @param reason 挂断的原因
+ */
+- (void)remoteUserDidLeft:(NSString *)userId reason:(XLCallDisconnectReason)reason {
+    [self resetLayout:self.callSession.isMultiCall
+            mediaType:self.callSession.mediaType
+           callStatus:self.callSession.callStatus];
+}
+
+/*!
+ 对方正在振铃，可以播放对应的彩铃
+ */
+- (void)shouldAlertForWaitingRemoteResponse {
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        NSString *ringPath = [[NSBundle mainBundle] pathForResource:@"voip_calling_ring.mp3" ofType:@"mp3"];
+        [self startPlayRing:ringPath];
+        self.needPlayingAlertAfterForeground = NO;
+    } else {
+        self.needPlayingAlertAfterForeground = YES;
+    }
+}
+
+/*!
+ 收到电话，可以播放铃声
+ */
+- (void)shouldRingForIncomingCall {
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        NSString *ringPath = [[NSBundle mainBundle] pathForResource:@"voip_call.mp3" ofType:@"mp3"];
+        [self startPlayRing:ringPath];
+        self.needPlayingRingAfterForeground = NO;
+    } else {
+        self.needPlayingRingAfterForeground = YES;
+    }
+}
+
+/*!
+ 停止播放铃声(通话接通或挂断)
+ */
+- (void)shouldStopAlertAndRing {
+    self.needPlayingRingAfterForeground = NO;
+    self.needPlayingAlertAfterForeground = NO;
+    [self stopPlayRing];
+}
+
+/*!
+ 通话过程中的错误回调
+ 
+ @param error 错误码
+ 
+ @warning 如果是不可恢复的错误，SDK会挂断电话并回调callDidDisconnect。
+ */
+- (void)errorDidOccur:(XLCallErrorCode)error {
+    if ([self respondsToSelector:@selector(tipsWillShow:)]) {
+        if (![self tipsWillShow:error]) {
+            return;
+        }
+    }
+    self.tipsLabel.text = [NSString stringWithFormat:@"错误码：%ld",(long)error];
+}
+
+
+/*!
+ 当前通话网络状态的回调，该回调方法每两秒触发一次
+ 
+ @param txQuality   上行网络质量
+ @param rxQuality   下行网络质量
+ */
+- (void)networkTxQuality:(AgoraRtcQuality)txQuality rxQuality:(AgoraRtcQuality)rxQuality{
+    NSLog(@"networkTxQuality, %lu, %lu", (unsigned long)txQuality, (unsigned long)rxQuality);
+}
+
+#pragma mark PublicFunciton
+/*!
+ 通话即将接通
+ */
+- (void)callWillConnect{
+    
+}
+/*!
+ 通话即将挂断
+ */
+- (void)callWillDisconnect{
+    
+}
+
+#pragma mark  ======================================   <Button点击事件>       ================================
+/*!
+ 摄像头前置后置
+ */
 -(void)cameraSwitchButtonClicked{
-    
-    
-}
--(void)cameraCloseButtonClicked{
-    
-    
-}
-- (void)hangupButtonClicked {
-    
 }
 
-- (void)acceptButtonClicked {
-    
+/*!
+ 开启关闭摄像头
+ */
+-(void)cameraCloseButtonClicked{
 }
-// 扬声器
+
+/*!
+ 挂断
+ */
+- (void)hangupButtonClicked {
+}
+
+/*!
+ 接听
+ */
+- (void)acceptButtonClicked {
+}
+
+/*!
+ 扬声器
+ */
 - (void)speakerButtonClicked {
     
 }
-//静音
+
+/*!
+ 静音
+ */
 - (void)muteButtonClicked {
     
 }
-//最小
+
+/*!
+ 最小化
+ */
 -(void)minimizeButtonClicked{
-    
     
 }
 
-
+/*
+ 错误回调
+ */
+- (BOOL)tipsWillShow:(XLCallErrorCode)warning {
+    return YES;
+}
 /*
  点击最小化Button的回调
  */

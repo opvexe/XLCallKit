@@ -128,7 +128,55 @@ typedef NS_ENUM(NSInteger, XLCallDisconnectReason) {
     XLCallDisconnectReasonAddToBlackList = 19,
 };
 
-
+/*!
+ 错误码
+ */
+typedef NS_ENUM(NSInteger, XLCallErrorCode) {
+    /*!
+     成功
+     */
+    XLCallSuccess = 0,
+    /*!
+     网络不可用
+     */
+    XLCallNetworkUnavailable = 1,
+    /*!
+     已经处于通话中了
+     */
+    XLCallOneCallExisted = 2,
+    /*!
+     无效操作
+     */
+    XLCallOperationUnavailable = 3,
+    /*!
+     参数错误
+     */
+    XLCallInvalidParam = 4,
+    /*!
+     网络不稳定
+     */
+    XLCallNetworkUnstable = 5,
+    /*!
+     媒体服务请求失败
+     */
+    XLCallMediaRequestFailed = 6,
+    /*!
+     媒体服务初始化失败
+     */
+    XLCallMediaServerNotReady = 7,
+    /*!
+     媒体服务未初始化
+     */
+    XLCallMediaServerNotInitialized = 8,
+    /*!
+     媒体服务请求超时
+     */
+    XLCallMediaRequestTimeout = 9,
+    /*!
+     未知的媒体服务错误
+     */
+    XLCallMediaUnkownError = 10,
+};
 
 /*!
  媒体录制状态

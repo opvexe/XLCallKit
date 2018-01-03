@@ -23,6 +23,7 @@
 #import "CallVideoKey.h"
 #import "XLUserInfo.h"
 #import "XLCallSession.h"
+#import "XLCall.h"
 #import "XLCallClient.h"
 #import "XLCallVideoUtility.h"
 #import "XLCallBaseViewController.h"
