@@ -70,7 +70,7 @@
     [self.blurView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
     }];
-        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:NO];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -94,15 +94,11 @@
         [self callDidDisconnect];
     }
     
-    [self resetLayout:self.callSession.isMultiCall
-            MediaType:self.callSession.mediaType
-           CallStatus:self.callSession.callStatus];
+    [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:4];
 }
 
 - (void)onOrientationChanged:(NSNotification *)notification {
-    [self resetLayout:self.callSession.isMultiCall
-            MediaType:self.callSession.mediaType
-           CallStatus:self.callSession.callStatus];
+    [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:self.callSession.callStatus];
 }
 
 
@@ -134,6 +130,29 @@
 }
 
 /*!
+ 结束通话
+ */
+-(void)callDidDisconnect{
+    [self callWillDisconnect];
+    [XLCallVideoUtility clearCallIdleTimerDisableds];
+    if (self.callSession.connectedTime > 0) {
+        self.tipsLabel.text =@"通话结束";
+    } else {
+        self.tipsLabel.text =
+        [XLCallVideoUtility getReadableStringForCallViewController:self.callSession.disconnectReason];
+    }
+    self.tipsLabel.textColor = [UIColor whiteColor];
+    
+    [self stopActiveTimer];
+    [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:self.callSession.callStatus];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        
+    });
+
+    [self removeProximityMonitoringObserver];
+}
+/*!
  重新Layout布局
  
  @param isMultiCall      是否多方通话
@@ -142,7 +161,7 @@
  
  @discussion 如果您需要重写并调整UI的布局，应该先调用super。
  */
-- (void)resetLayout:(BOOL)isMultiCall MediaType:(XLCallMediaType )mediaType CallStatus:(XLCallStatus )callStatus{
+- (void)resetLayout:(BOOL)isMultiCall mediaType:(XLCallMediaType)mediaType callStatus:(XLCallStatus)callStatus{
     if (mediaType == XLCallMediaAudio && !isMultiCall) {
         self.backgroundView.backgroundColor = UIColorFromRGB(0x262e42);
         self.backgroundView.hidden = NO;
@@ -159,7 +178,6 @@
         
         self.inviteUserButton.hidden = YES;
         
-        // header orgin y = LSWMCallVerticalMargin * 3
         if (callStatus == XLCallActive) {
             self.timeLabel.frame =
             CGRectMake(LSWMCallHorizontalMargin,
@@ -271,7 +289,6 @@
             self.timeLabel.hidden = YES;
         }
         
-        // header orgin y = LSWMCallVerticalMargin * 3
         if (callStatus == XLCallActive) {
             
             self.tipsLabel.frame =
@@ -732,26 +749,53 @@
 - (UIButton *)minimizeButton {
     if (!_minimizeButton) {
         _minimizeButton =[UIButton buttonWithType:UIButtonTypeCustom];
-        _minimizeButton.backgroundColor = [UIColor redColor];
-        [_minimizeButton setImage:[UIImage imageWithColor:[UIColor redColor]]
+        _minimizeButton.frame =CGRectMake(LSWMCallHorizontalMargin / 2, LSWMCallVerticalMargin / 2,
+                                          LSWMCallButtonLength, LSWMCallButtonLength);
+        [_minimizeButton setImage:[UIImage imageNamed:@"minimize.png"]
                          forState:UIControlStateNormal];
-        [_minimizeButton setImage:[UIImage imageWithColor:[UIColor redColor]]
+        [_minimizeButton setImage:[UIImage imageNamed:@"minimize.png"]
                          forState:UIControlStateHighlighted];
-        [_minimizeButton addTarget:self
-                            action:@selector(minimizeButtonClicked)
-                  forControlEvents:UIControlEventTouchUpInside];
+        
+        [_minimizeButton addTarget:self action:@selector(minimizeButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+        
         [self.view addSubview:_minimizeButton];
         _minimizeButton.hidden = YES;
     }
     return _minimizeButton;
 }
+
+- (UIButton *)inviteUserButton {
+    if (!_inviteUserButton) {
+        _inviteUserButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _inviteUserButton.frame =CGRectMake(LSWMCallHorizontalMargin / 2, LSWMCallVerticalMargin / 2,
+                                            LSWMCallButtonLength, LSWMCallButtonLength);
+        [_inviteUserButton setImage:[UIImage imageNamed:@"add"]
+                           forState:UIControlStateNormal];
+        [_inviteUserButton setImage:[UIImage imageNamed:@"add"]
+                           forState:UIControlStateHighlighted];
+        
+        [_inviteUserButton addTarget:self
+                              action:@selector(inviteUserButtonClicked)
+                    forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.view addSubview:_inviteUserButton];
+        _inviteUserButton.hidden = YES;
+    }
+    return _inviteUserButton;
+}
+
+- (void)inviteUserButtonClicked {
+    [self didTapInviteUserButton];
+}
+
 - (UILabel *)timeLabel {
     if (!_timeLabel) {
         _timeLabel = [[UILabel alloc] init];
-        _timeLabel.backgroundColor = [UIColor redColor];
+        _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.textColor = [UIColor whiteColor];
         _timeLabel.font = [UIFont systemFontOfSize:18];
         _timeLabel.textAlignment = NSTextAlignmentCenter;
+        _timeLabel.text = @"1000秒";
         [self.view addSubview:_timeLabel];
         _timeLabel.hidden = YES;
     }
@@ -760,11 +804,11 @@
 - (UILabel *)tipsLabel {
     if (!_tipsLabel) {
         _tipsLabel = [[UILabel alloc] init];
-        _tipsLabel.backgroundColor = [UIColor redColor];
+        _tipsLabel.backgroundColor = [UIColor clearColor];
         _tipsLabel.textColor = [UIColor whiteColor];
         _tipsLabel.font = [UIFont systemFontOfSize:18];
         _tipsLabel.textAlignment = NSTextAlignmentCenter;
-        
+        _tipsLabel.text = @"网络异常";
         [self.view addSubview:_tipsLabel];
         _tipsLabel.hidden = YES;
     }
@@ -773,50 +817,53 @@
 
 - (UIButton *)muteButton {
     if (!_muteButton) {
-        _muteButton =[UIButton buttonWithType:UIButtonTypeCustom];
-        [_muteButton setImage:[UIImage imageWithColor:[UIColor yellowColor]] forState:UIControlStateNormal];
-        [_muteButton setImage:[UIImage imageWithColor:[UIColor yellowColor]]
+        _muteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_muteButton setImage:[UIImage imageNamed:@"mute"] forState:UIControlStateNormal];
+        [_muteButton setImage:[UIImage imageNamed:@"mute_hover"]
                      forState:UIControlStateHighlighted];
-        [_muteButton setImage:[UIImage imageWithColor:[UIColor redColor]]
+        [_muteButton setImage:[UIImage imageNamed:@"mute_hover"]
                      forState:UIControlStateSelected];
         [_muteButton setTitle:@"静音"
                      forState:UIControlStateNormal];
+        [_muteButton setSelected:self.callSession.isMuted];
         [_muteButton addTarget:self action:@selector(muteButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+        
         [self.view addSubview:_muteButton];
-        _muteButton.backgroundColor = [UIColor redColor];
         _muteButton.hidden = YES;
     }
     return _muteButton;
 }
-
 - (UIButton *)speakerButton {
     if (!_speakerButton) {
-        _speakerButton =[UIButton buttonWithType:UIButtonTypeCustom];
-        [_speakerButton setImage:[UIImage imageWithColor:[UIColor yellowColor]]
+        _speakerButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_speakerButton setImage:[UIImage imageNamed:@"handfree.png"]
                         forState:UIControlStateNormal];
-        [_speakerButton setImage:[UIImage imageWithColor:[UIColor yellowColor]]
+        [_speakerButton setImage:[UIImage imageNamed:@"handfree_hover.png"]
                         forState:UIControlStateHighlighted];
-        [_speakerButton setImage:[UIImage imageWithColor:[UIColor redColor]]
+        [_speakerButton setImage:[UIImage imageNamed:@"handfree_hover.png"]
                         forState:UIControlStateSelected];
-        [_speakerButton setTitle:@"扬声器"
+        [_speakerButton setTitle:@"免提"
                         forState:UIControlStateNormal];
+        [_speakerButton setSelected:self.callSession.speakerEnabled];
+        
         [_speakerButton addTarget:self
                            action:@selector(speakerButtonClicked)
                  forControlEvents:UIControlEventTouchUpInside];
-        _speakerButton.backgroundColor = [UIColor redColor];
+        
         [self.view addSubview:_speakerButton];
         _speakerButton.hidden = YES;
     }
     return _speakerButton;
 }
+
 - (UIButton *)acceptButton {
     if (!_acceptButton) {
         _acceptButton =[UIButton buttonWithType:UIButtonTypeCustom];
-        [_acceptButton setImage:[UIImage imageWithColor:[UIColor yellowColor]]
+        [_acceptButton setImage:[UIImage imageNamed:@"answer.png"]
                        forState:UIControlStateNormal];
-        [_acceptButton setImage:[UIImage imageWithColor:[UIColor yellowColor]]
+        [_acceptButton setImage:[UIImage imageNamed:@"answer_hover.png"]
                        forState:UIControlStateHighlighted];
-        [_acceptButton setTitle:@"接受"
+        [_acceptButton setTitle:@"接听"
                        forState:UIControlStateNormal];
         
         [_acceptButton addTarget:self
@@ -824,8 +871,6 @@
                 forControlEvents:UIControlEventTouchUpInside];
         
         [self.view addSubview:_acceptButton];
-        
-        _acceptButton.backgroundColor = [UIColor redColor];
         _acceptButton.hidden = YES;
     }
     return _acceptButton;
@@ -834,17 +879,17 @@
 - (UIButton *)hangupButton {
     if (!_hangupButton) {
         _hangupButton =[UIButton buttonWithType:UIButtonTypeCustom];
-        [_hangupButton setImage:[UIImage imageWithColor:[UIColor yellowColor]]
+        [_hangupButton setImage:[UIImage imageNamed:@"hang_up.png"]
                        forState:UIControlStateNormal];
-        [_hangupButton setImage:[UIImage imageWithColor:[UIColor yellowColor]]
+        [_hangupButton setImage:[UIImage imageNamed:@"hang_up_hover.png"]
                        forState:UIControlStateHighlighted];
-        [_hangupButton setTitle:@"拒绝"
+        [_hangupButton setTitle:@"挂断"
                        forState:UIControlStateNormal];
         
         [_hangupButton addTarget:self
                           action:@selector(hangupButtonClicked)
                 forControlEvents:UIControlEventTouchUpInside];
-        _hangupButton.backgroundColor = [UIColor redColor];
+        
         [self.view addSubview:_hangupButton];
         _hangupButton.hidden = YES;
     }
@@ -853,31 +898,79 @@
 
 - (UIButton *)cameraCloseButton {
     if (!_cameraCloseButton) {
-        
         _cameraCloseButton =[UIButton buttonWithType:UIButtonTypeCustom];
-        [_cameraCloseButton setImage:[UIImage imageWithColor:[UIColor yellowColor]]
-                            forState:UIControlStateNormal];
-        [_cameraCloseButton setImage:[UIImage imageWithColor:[UIColor yellowColor]]
-                            forState:UIControlStateHighlighted];
-        [_cameraCloseButton setImage:[UIImage imageWithColor:[UIColor yellowColor]]
-                            forState:UIControlStateSelected];
-        [_cameraCloseButton setTitle:@"关闭摄像头"
-                            forState:UIControlStateNormal];
-        [_cameraCloseButton setTitle:@"打开摄像头"
-                            forState:UIControlStateSelected];
+        
+        if (!self.callSession.isMultiCall) {
+            [_cameraCloseButton setImage:[UIImage imageNamed:@"audio.png"]
+                                forState:UIControlStateNormal];
+            [_cameraCloseButton setImage:[UIImage imageNamed:@"audio.png"]
+                                forState:UIControlStateHighlighted];
+            [_cameraCloseButton
+             setTitle:@"语音聊天"
+             forState:UIControlStateNormal];
+        } else {
+            [_cameraCloseButton setImage:[UIImage imageNamed:@"video.png"]
+                                forState:UIControlStateNormal];
+            [_cameraCloseButton setImage:[UIImage imageNamed:@"video.png"]
+                                forState:UIControlStateHighlighted];
+            [_cameraCloseButton setImage:[UIImage imageNamed:@"video_hover.png"]
+                                forState:UIControlStateSelected];
+            [_cameraCloseButton setTitle:@"关闭摄像头"
+                                forState:UIControlStateNormal];
+            [_cameraCloseButton setTitle:@"开启摄像头"
+                                forState:UIControlStateSelected];
+        }
+        [_cameraCloseButton setSelected:!self.callSession.cameraEnabled];
         [_cameraCloseButton addTarget:self
                                action:@selector(cameraCloseButtonClicked)
                      forControlEvents:UIControlEventTouchUpInside];
-        _cameraCloseButton.backgroundColor = [UIColor redColor];
+        
         [self.view addSubview:_cameraCloseButton];
         _cameraCloseButton.hidden = YES;
     }
     return _cameraCloseButton;
 }
 
+- (UIButton *)cameraSwitchButton {
+    if (!_cameraSwitchButton) {
+        _cameraSwitchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        if (!self.callSession.isMultiCall) {
+            [_cameraSwitchButton setImage:[UIImage imageNamed:@"camera.png"]
+                                 forState:UIControlStateNormal];
+            [_cameraSwitchButton setImage:[UIImage imageNamed:@"camera_hover.png"]
+                                 forState:UIControlStateHighlighted];
+            [_cameraSwitchButton setImage:[UIImage imageNamed:@"camera_hover.png"]
+                                 forState:UIControlStateSelected];
+            [_cameraSwitchButton setTitle:@"摄像头"
+                                 forState:UIControlStateNormal];
+            [_cameraSwitchButton setTitle:@"摄像头"
+                                 forState:UIControlStateSelected];
+        } else {
+            [_cameraSwitchButton setImage:[UIImage imageNamed:@"change.png"]
+                                 forState:UIControlStateNormal];
+            [_cameraSwitchButton setImage:[UIImage imageNamed:@"change.png"]
+                                 forState:UIControlStateHighlighted];
+            [_cameraSwitchButton setImage:[UIImage imageNamed:@"change.png"]
+                                 forState:UIControlStateSelected];
+        }
+        
+        [_cameraSwitchButton addTarget:self
+                                action:@selector(cameraSwitchButtonClicked)
+                      forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.view addSubview:_cameraSwitchButton];
+        _cameraSwitchButton.hidden = YES;
+    }
+    return _cameraSwitchButton;
+}
 
 
 #pragma TargetAction
+-(void)cameraSwitchButtonClicked{
+    
+    
+}
 -(void)cameraCloseButtonClicked{
     
     
@@ -904,61 +997,53 @@
 }
 
 
-
-
-
-#pragma mark - outside callback
--(void)callDidDisconnect{
-    
-    
-}
-/*!
+/*
  点击最小化Button的回调
  */
 - (void)didTapMinimizeButton{
     
 }
-/*!
+/*
  点击加人Button的回调
  */
 - (void)didTapInviteUserButton{
     
 }
-/*!
+/*
  点击接听Button的回调
  */
 - (void)didTapAcceptButton{
     
 }
 
-/*!
+/*
  点击挂断Button的回调
  */
 - (void)didTapHangupButton{
     
 }
 
-/*!
+/*
  点击扬声器Button的回调
  */
 - (void)didTapSpeakerButton{
     
 }
-/*!
+/*
  点击静音Button的回调
  */
 - (void)didTapMuteButton{
     
 }
 
-/*!
+/*
  点击开启、关闭摄像头Button的回调
  */
 - (void)didTapCameraCloseButton{
     
 }
 
-/*!
+/*
  点击切换前后摄像头Button的回调
  */
 - (void)didTapCameraSwitchButton{

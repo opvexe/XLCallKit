@@ -27,9 +27,9 @@
     if (!_remotePortraitView) {
         _remotePortraitView = [[UIImageView alloc] init];
         _remotePortraitView.hidden = YES;
-        _remotePortraitView.layer.cornerRadius = 4;
+        _remotePortraitView.layer.cornerRadius = 5.0;
         _remotePortraitView.layer.masksToBounds = YES;
-        _remotePortraitView.backgroundColor = [UIColor yellowColor];
+        _remotePortraitView.image = [UIImage imageNamed:@"portrait.jpg"];
         [self.view addSubview:_remotePortraitView];
     }
     return _remotePortraitView;
@@ -42,6 +42,7 @@
         _remoteNameLabel.textColor = [UIColor whiteColor];
         _remoteNameLabel.font = [UIFont systemFontOfSize:18];
         _remoteNameLabel.textAlignment = NSTextAlignmentCenter;
+        _remoteNameLabel.text = @"shumin";
         [self.view addSubview:_remoteNameLabel];
         _remoteNameLabel.hidden = YES;
     }
@@ -89,7 +90,7 @@
 }
 
 
-- (void)resetLayout:(BOOL)isMultiCall MediaType:(XLCallMediaType)mediaType CallStatus:(XLCallStatus)callStatus {
+- (void)resetLayout:(BOOL)isMultiCall mediaType:(XLCallMediaType)mediaType callStatus:(XLCallStatus)callStatus{
     [super resetLayout:isMultiCall mediaType:mediaType callStatus:callStatus];
     UIImage *remoteHeaderImage = self.remotePortraitView.image;
     if (mediaType == XLCallMediaAudio) {
@@ -122,8 +123,8 @@
     } else {
         if (callStatus == XLCallDialing) {
             self.mainVideoView.hidden = NO;
-//            [self.callSession setVideoView:self.mainVideoView
-//                                    userId:[RCIMClient sharedRCIMClient].currentUserInfo.userId];
+            [self.callSession setVideoView:self.mainVideoView
+                                    userId:[XLUserInfoCacheManager getUser].userId];
             self.blurView.hidden = YES;
         } else if (callStatus == XLCallActive) {
             self.mainVideoView.hidden = NO;
@@ -176,8 +177,8 @@
                 CGRectMake(self.view.frame.size.width - LSWMCallHeaderLength - LSWMCallHorizontalMargin / 2,
                            LSWMCallVerticalMargin, LSWMCallHeaderLength, LSWMCallHeaderLength * 1.5);
             }
-//            [self.callSession setVideoView:self.subVideoView
-//                                    userId:[RCIMClient sharedRCIMClient].currentUserInfo.userId];
+            [self.callSession setVideoView:self.subVideoView
+                                    userId:[XLUserInfoCacheManager getUser].userId];
             self.subVideoView.hidden = NO;
         } else {
             self.subVideoView.hidden = YES;

@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "XLUserInfo.h"
 
 @interface AppDelegate ()
 
@@ -23,6 +22,9 @@
     if ([XLUserInfoCacheManager saveUser:user]) {
         NSLog(@"suceess");
     }
+    
+    //登录信令
+    [[XLCallClient sharedXLCallClient]login];
     
     return YES;
 }

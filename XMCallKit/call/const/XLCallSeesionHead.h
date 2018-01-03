@@ -21,6 +21,7 @@
 ///CallKit
 #import "XLConst.h"
 #import "CallVideoKey.h"
+#import "XLUserInfo.h"
 #import "XLCallSession.h"
 #import "XLCallClient.h"
 #import "XLCallVideoUtility.h"

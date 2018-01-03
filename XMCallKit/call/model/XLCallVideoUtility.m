@@ -29,6 +29,11 @@
     [UIApplication sharedApplication].idleTimerDisabled = oldStatus;
 }
 
++ (NSString *)getReadableStringForCallViewController:(XLCallDisconnectReason)hangupReason{
+    
+    return @"";
+}
+
 + (BOOL)isLandscape {
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     return screenBounds.size.width > screenBounds.size.height;

@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, XLCallStatus) {
     /*!
      初始状态
      */
-    XLCallIdle   = 0,
+//    XLCallIdle   = 0,
     /*!
      正在呼出
      */

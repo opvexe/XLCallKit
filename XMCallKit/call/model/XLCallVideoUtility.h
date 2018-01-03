@@ -22,5 +22,14 @@
  */
 + (void)clearCallIdleTimerDisableds;
 
+
+/**
+ * 挂断原因回调
+
+ @param hangupReason hangupReason description
+ @return return value description
+ */
++ (NSString *)getReadableStringForCallViewController:(XLCallDisconnectReason)hangupReason;
+
 + (BOOL)isLandscape;
 @end

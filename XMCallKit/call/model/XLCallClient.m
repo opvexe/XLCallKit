@@ -231,7 +231,7 @@
  设置信令登录
  */
 -(void)login{
-    NSString *account   = @"" ;   ///客户端定义的用户账号
+    NSString *account   = [[XLUserInfoCacheManager getUser]userId];   ///客户端定义的用户账号
     unsigned expiredTime = (unsigned) [[NSDate date] timeIntervalSince1970] + 3600;
     NSString *token = [XLCertificateToken SignalingKeyByAppId:AgoraAppID
                                                   Certificate:AgoraAppCertificate

@@ -8,7 +8,7 @@
 
 #import "XLUserInfo.h"
 
-#define UserPath  [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XLUserInfoCache.archive"]
+#define UserPath  [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"xlUserInfoCache.plist"]
 @implementation XLUserInfo
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
@@ -46,7 +46,6 @@
 //账户信息存储
 + (BOOL)saveUser:(XLUserInfo *)user
 {
-    NSLog(@"%@",UserPath);
     return [NSKeyedArchiver archiveRootObject:user toFile:UserPath];
 }
 
