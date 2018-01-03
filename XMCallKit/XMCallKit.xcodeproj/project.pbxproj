@@ -10,6 +10,8 @@
 		33CF467204E5F7DC9436CC6D /* libPods-XMCallKitUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F804EE50568C992426261348 /* libPods-XMCallKitUITests.a */; };
 		3E692E3DA57217669C96566D /* libPods-XMCallKitTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 189530A8AB32610621170D05 /* libPods-XMCallKitTests.a */; };
 		9B58D38A8C6E8FA79211CD8D /* libPods-XMCallKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A73D6A8DC6E87735BAF8C54A /* libPods-XMCallKit.a */; };
+		D00A7B281FFCBF230026CCAE /* XLUserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D00A7B271FFCBF230026CCAE /* XLUserInfo.m */; };
+		D00A7B2A1FFCC2E80026CCAE /* portrait.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D00A7B291FFCC2E80026CCAE /* portrait.jpg */; };
 		D00C86171FECD74A001AA4D3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C86161FECD74A001AA4D3 /* AppDelegate.m */; };
 		D00C861A1FECD74A001AA4D3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C86191FECD74A001AA4D3 /* ViewController.m */; };
 		D00C861D1FECD74A001AA4D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D00C861B1FECD74A001AA4D3 /* Main.storyboard */; };
@@ -94,6 +96,9 @@
 		A73D6A8DC6E87735BAF8C54A /* libPods-XMCallKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XMCallKit.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA7F4C1099CCBE26401AB446 /* Pods-XMCallKitUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XMCallKitUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XMCallKitUITests/Pods-XMCallKitUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		B802E077936489974EC41B3A /* Pods-XMCallKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XMCallKit.release.xcconfig"; path = "Pods/Target Support Files/Pods-XMCallKit/Pods-XMCallKit.release.xcconfig"; sourceTree = "<group>"; };
+		D00A7B261FFCBF230026CCAE /* XLUserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLUserInfo.h; sourceTree = "<group>"; };
+		D00A7B271FFCBF230026CCAE /* XLUserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XLUserInfo.m; sourceTree = "<group>"; };
+		D00A7B291FFCC2E80026CCAE /* portrait.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = portrait.jpg; sourceTree = "<group>"; };
 		D00C86121FECD74A001AA4D3 /* XMCallKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XMCallKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D00C86151FECD74A001AA4D3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D00C86161FECD74A001AA4D3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -227,6 +232,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		D00A7B251FFCBF0A0026CCAE /* userInfo */ = {
+			isa = PBXGroup;
+			children = (
+				D00A7B261FFCBF230026CCAE /* XLUserInfo.h */,
+				D00A7B271FFCBF230026CCAE /* XLUserInfo.m */,
+			);
+			path = userInfo;
+			sourceTree = "<group>";
+		};
 		D00C86091FECD74A001AA4D3 = {
 			isa = PBXGroup;
 			children = (
@@ -287,6 +301,7 @@
 		D00C86471FECDB1A001AA4D3 /* call */ = {
 			isa = PBXGroup;
 			children = (
+				D00A7B251FFCBF0A0026CCAE /* userInfo */,
 				D0115AEA1FF37DB5009756E9 /* key */,
 				D0115ADA1FF3687E009756E9 /* vendor */,
 				D0115A8B1FF2222B009756E9 /* resouce */,
@@ -375,6 +390,7 @@
 		D0115A951FF243D5009756E9 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				D00A7B291FFCC2E80026CCAE /* portrait.jpg */,
 				D0115AB01FF243F9009756E9 /* actionbar_audio_call_icon.png */,
 				D0115AAD1FF243F8009756E9 /* actionbar_video_call_icon.png */,
 				D0115AAC1FF243F8009756E9 /* add@2x.png */,
@@ -577,6 +593,7 @@
 				D0115ACA1FF243F9009756E9 /* add@2x.png in Resources */,
 				D0115ACB1FF243F9009756E9 /* actionbar_video_call_icon.png in Resources */,
 				D0115ABD1FF243F9009756E9 /* audio_min@2x.png in Resources */,
+				D00A7B2A1FFCC2E80026CCAE /* portrait.jpg in Resources */,
 				D0115AC81FF243F9009756E9 /* video_hover@2x.png in Resources */,
 				D0115ABE1FF243F9009756E9 /* audio_receiver_right@2x.png in Resources */,
 				D0115AD11FF243F9009756E9 /* audio_receiver_up_right@2x.png in Resources */,
@@ -784,6 +801,7 @@
 				D0115AF21FF37EAB009756E9 /* CallVideoKey.mm in Sources */,
 				D06F4DEC1FF39FC000A987DD /* XLEncryptionType.m in Sources */,
 				D00C86AD1FF0CC4E001AA4D3 /* XLCallAudioMultiCallViewController.m in Sources */,
+				D00A7B281FFCBF230026CCAE /* XLUserInfo.m in Sources */,
 				D00C864B1FECDB6D001AA4D3 /* XLCallBaseViewController.m in Sources */,
 				D00C86AA1FF0CC24001AA4D3 /* XLCallSingleCallViewController.m in Sources */,
 				D0115AE91FF37923009756E9 /* XLCall.mm in Sources */,

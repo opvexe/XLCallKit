@@ -7,7 +7,8 @@
 //
 
 #import "AppDelegate.h"
-#import "XLCallBaseViewController.h"
+#import "XLUserInfo.h"
+
 @interface AppDelegate ()
 
 @end
@@ -18,6 +19,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
+    XLUserInfo *user = [[XLUserInfo alloc]initWithUserId:@"1" name:@"min" portrait:@"portrait"];
+    if ([XLUserInfoCacheManager saveUser:user]) {
+        NSLog(@"suceess");
+    }
+    
     return YES;
 }
 
