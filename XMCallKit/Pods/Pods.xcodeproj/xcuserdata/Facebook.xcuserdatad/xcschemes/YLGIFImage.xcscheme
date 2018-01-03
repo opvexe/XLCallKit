@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '3FD7BAFFBFC93B67973870E095B3F72E'
-               BlueprintName = 'Pods-XMCallKit'
+               BlueprintIdentifier = 'C49E8FD67F799AB062FFFD300DD877F0'
+               BlueprintName = 'YLGIFImage'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'libPods-XMCallKit.a'>
+               BuildableName = 'libYLGIFImage.a'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

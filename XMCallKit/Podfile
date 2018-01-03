@@ -20,5 +20,5 @@ target 'XMCallKit' do
 pod 'MJExtension'
 pod 'Masonry'
 pod 'AgoraRtcEngine_iOS'
-
+pod 'YLGIFImage' #异步方式实现突Gif突破编码、显示，低内存占用.  
 end

@@ -45,7 +45,7 @@
  */
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    //    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
 }
 /**
  * 视图加载
@@ -70,7 +70,7 @@
     [self.blurView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
     }];
-    //    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:NO];
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -94,14 +94,15 @@
         [self callDidDisconnect];
     }
     
-    [self resetLayoutWithMediaType:self.callSession.mediaType
-                        callStatus:self.callSession.callStatus];
-    
+    [self resetLayout:self.callSession.isMultiCall
+            MediaType:self.callSession.mediaType
+           CallStatus:self.callSession.callStatus];
 }
 
 - (void)onOrientationChanged:(NSNotification *)notification {
-    [self resetLayoutWithMediaType:self.callSession.mediaType
-                        callStatus:self.callSession.callStatus];
+    [self resetLayout:self.callSession.isMultiCall
+            MediaType:self.callSession.mediaType
+           CallStatus:self.callSession.callStatus];
 }
 
 
@@ -132,83 +133,78 @@
     
 }
 
-
-/**
- * UI布局
+/*!
+ 重新Layout布局
  
- @param mediaType mediaType description
- @param callStatus callStatus description
+ @param isMultiCall      是否多方通话
+ @param mediaType        通话媒体类型
+ @param callStatus       通话状态
+ 
+ @discussion 如果您需要重写并调整UI的布局，应该先调用super。
  */
--(void)resetLayoutWithMediaType:(XLCallMediaType)mediaType callStatus:(XLCallStatus)callStatus{
-    if (mediaType == XLCallMediaAudio) {
+- (void)resetLayout:(BOOL)isMultiCall MediaType:(XLCallMediaType )mediaType CallStatus:(XLCallStatus )callStatus{
+    if (mediaType == XLCallMediaAudio && !isMultiCall) {
         self.backgroundView.backgroundColor = UIColorFromRGB(0x262e42);
         self.backgroundView.hidden = NO;
+        
         self.blurView.hidden = NO;
         
         if (callStatus == XLCallActive) {
-            [self.minimizeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(XLCallVerticalMargin);
-                make.left.mas_equalTo(XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
+            self.minimizeButton.frame = CGRectMake(LSWMCallHorizontalMargin / 2, LSWMCallVerticalMargin,
+                                                   LSWMCallButtonLength / 2, LSWMCallButtonLength / 2);
             self.minimizeButton.hidden = NO;
         } else if (callStatus != XLCallHangup) {
             self.minimizeButton.hidden = YES;
         }
+        
+        self.inviteUserButton.hidden = YES;
+        
+        // header orgin y = LSWMCallVerticalMargin * 3
         if (callStatus == XLCallActive) {
-            [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(XLCallLabelHeight);
-                make.right.and.left.mas_equalTo(0);
-                make.bottom.mas_equalTo(self.hangupButton.mas_top).offset(-XLCallInsideMargin);
-            }];
+            self.timeLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin,
+                       LSWMCallVerticalMargin * 3 + LSWMCallHeaderLength + LSWMCallInsideMargin * 2 + LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
             self.timeLabel.hidden = NO;
         } else if (callStatus != XLCallHangup) {
             self.timeLabel.hidden = YES;
         }
         
         if (callStatus == XLCallHangup) {
-            [self.tipsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(XLCallLabelHeight);
-                make.right.and.left.mas_equalTo(0);
-                make.centerY.mas_equalTo(self);
-            }];
-            self.timeLabel.hidden = NO;
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength -
+                       LSWMCallInsideMargin * 3 - LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
         } else if (callStatus == XLCallActive) {
-            [self.tipsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(XLCallLabelHeight);
-                make.right.and.left.mas_equalTo(0);
-                make.centerY.mas_equalTo(self);
-            }];
-            self.timeLabel.hidden = NO;
+            self.tipsLabel.frame = CGRectMake(
+                                              LSWMCallHorizontalMargin,
+                                              MAX((self.view.frame.size.height - LSWMCallLabelHeight) / 2,
+                                                  LSWMCallVerticalMargin * 3 + LSWMCallHeaderLength + LSWMCallInsideMargin * 3 + LSWMCallLabelHeight * 2),
+                                              self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
         } else {
-            [self.tipsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(XLCallLabelHeight);
-                make.right.and.left.mas_equalTo(0);
-                make.centerY.mas_equalTo(self);
-            }];
-            self.timeLabel.hidden = NO;
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin,
+                       LSWMCallVerticalMargin * 3 + LSWMCallHeaderLength + LSWMCallInsideMargin * 2 + LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
         }
         self.tipsLabel.hidden = NO;
         
         if (callStatus == XLCallActive) {
-            [self.hangupButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-XLCallVerticalMargin);
-                make.left.mas_equalTo(XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
-            self.hangupButton.selected  =YES;
-            [self layoutTextUnderImageButton:self.hangupButton];
-            self.hangupButton.hidden = NO;
+            self.muteButton.frame = CGRectMake(LSWMCallHorizontalMargin,
+                                               self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength,
+                                               LSWMCallButtonLength, LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.muteButton];
+            self.muteButton.hidden = NO;
         } else if (callStatus != XLCallHangup) {
-            self.hangupButton.hidden = YES;
+            self.muteButton.hidden = YES;
         }
         
         if (callStatus == XLCallActive) {
-            [self.speakerButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.hangupButton.mas_bottom);
-                make.right.mas_equalTo(-XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
+            self.speakerButton.frame =
+            CGRectMake(self.view.frame.size.width - LSWMCallHorizontalMargin - LSWMCallButtonLength,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.speakerButton];
             self.speakerButton.hidden = NO;
         } else if (callStatus != XLCallHangup) {
@@ -216,39 +212,32 @@
         }
         
         if (callStatus == XLCallDialing) {
-            [self.hangupButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-XLCallVerticalMargin);
-                make.left.mas_equalTo(XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
-            self.hangupButton.selected  =YES;
+            self.hangupButton.frame =
+            CGRectMake((self.view.frame.size.width - LSWMCallButtonLength) / 2,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.hangupButton];
             self.hangupButton.hidden = NO;
             
             self.acceptButton.hidden = YES;
         } else if (callStatus == XLCallIncoming || callStatus == XLCallRinging) {
-            [self.hangupButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-XLCallVerticalMargin);
-                make.left.mas_equalTo(XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
-            self.hangupButton.selected  =YES;
+            self.hangupButton.frame = CGRectMake(
+                                                 LSWMCallHorizontalMargin, self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength,
+                                                 LSWMCallButtonLength, LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.hangupButton];
             self.hangupButton.hidden = NO;
             
-            [self.acceptButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.hangupButton.mas_bottom);
-                make.right.mas_equalTo(-XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
+            self.acceptButton.frame =
+            CGRectMake(self.view.frame.size.width - LSWMCallHorizontalMargin - LSWMCallButtonLength,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.acceptButton];
             self.acceptButton.hidden = NO;
         } else if (callStatus == XLCallActive) {
-            [self.hangupButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-XLCallVerticalMargin);
-                make.left.mas_equalTo(XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
+            self.hangupButton.frame =
+            CGRectMake((self.view.frame.size.width - LSWMCallButtonLength) / 2,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.hangupButton];
             self.hangupButton.hidden = NO;
             
@@ -258,117 +247,95 @@
         self.cameraCloseButton.hidden = YES;
         self.cameraSwitchButton.hidden = YES;
         
-    } else if (mediaType == XLCallMediaVideo) {
-        
-        self.backgroundView.backgroundColor = UIColorFromRGB(0x262e42);
+    } else if (mediaType == XLCallMediaVideo && !isMultiCall) {
         self.backgroundView.hidden = NO;
-        self.blurView.hidden = NO;
+        
+        self.blurView.hidden = YES;
         
         if (callStatus == XLCallActive) {
-            [self.minimizeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(XLCallVerticalMargin);
-                make.left.mas_equalTo(XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
+            self.minimizeButton.frame = CGRectMake(LSWMCallHorizontalMargin / 2, LSWMCallVerticalMargin,
+                                                   LSWMCallButtonLength / 2, LSWMCallButtonLength / 2);
             self.minimizeButton.hidden = NO;
         } else if (callStatus != XLCallHangup) {
             self.minimizeButton.hidden = YES;
         }
         
+        self.inviteUserButton.hidden = YES;
+        
         if (callStatus == XLCallActive) {
-            [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(XLCallLabelHeight);
-                make.right.and.left.mas_equalTo(0);
-                make.bottom.mas_equalTo(self.hangupButton.mas_top).offset(-XLCallInsideMargin);
-            }];
+            self.timeLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin, LSWMCallVerticalMargin + LSWMCallInsideMargin + LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
             self.timeLabel.hidden = NO;
         } else if (callStatus != XLCallHangup) {
             self.timeLabel.hidden = YES;
         }
         
-        if (callStatus == XLCallHangup) {
-            [self.tipsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(XLCallLabelHeight);
-                make.right.and.left.mas_equalTo(0);
-                make.centerY.mas_equalTo(self);
-            }];
-            self.timeLabel.hidden = NO;
-        } else if (callStatus == XLCallActive) {
-            [self.tipsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(XLCallLabelHeight);
-                make.right.and.left.mas_equalTo(0);
-                make.centerY.mas_equalTo(self);
-            }];
-            self.timeLabel.hidden = NO;
-        } else {
-            [self.tipsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(XLCallLabelHeight);
-                make.right.and.left.mas_equalTo(0);
-                make.centerY.mas_equalTo(self);
-            }];
-            self.timeLabel.hidden = NO;
+        // header orgin y = LSWMCallVerticalMargin * 3
+        if (callStatus == XLCallActive) {
+            
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin,
+                       MAX((self.view.frame.size.height - LSWMCallLabelHeight) / 2,
+                           LSWMCallVerticalMargin + LSWMCallHeaderLength * 1.5 + LSWMCallInsideMargin * 3),
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+        } else if (callStatus == XLCallDialing) {
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin,
+                       LSWMCallVerticalMargin * 3 + LSWMCallHeaderLength + LSWMCallInsideMargin * 2 + LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+        } else if (callStatus == XLCallIncoming || callStatus == XLCallRinging) {
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin,
+                       LSWMCallVerticalMargin * 3 + LSWMCallHeaderLength + LSWMCallInsideMargin * 2 + LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+        } else if (callStatus == XLCallHangup) {
+            self.tipsLabel.frame = CGRectMake(
+                                              LSWMCallHorizontalMargin,
+                                              self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength * 2 - LSWMCallInsideMargin * 8,
+                                              self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
         }
         self.tipsLabel.hidden = NO;
         
         if (callStatus == XLCallActive) {
-            [self.hangupButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-XLCallVerticalMargin);
-                make.left.mas_equalTo(XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
-            self.hangupButton.selected  =YES;
-            [self layoutTextUnderImageButton:self.hangupButton];
-            self.hangupButton.hidden = NO;
+            self.muteButton.frame = CGRectMake(LSWMCallHorizontalMargin,
+                                               self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength,
+                                               LSWMCallButtonLength, LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.muteButton];
+            self.muteButton.hidden = NO;
         } else if (callStatus != XLCallHangup) {
-            self.hangupButton.hidden = YES;
+            self.muteButton.hidden = YES;
         }
         
-        if (callStatus == XLCallActive) {
-            [self.speakerButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.hangupButton.mas_bottom);
-                make.right.mas_equalTo(-XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
-            [self layoutTextUnderImageButton:self.speakerButton];
-            self.speakerButton.hidden = NO;
-        } else if (callStatus != XLCallHangup) {
-            self.speakerButton.hidden = YES;
-        }
+        self.speakerButton.hidden = YES;
         
         if (callStatus == XLCallDialing) {
-            [self.hangupButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-XLCallVerticalMargin);
-                make.left.mas_equalTo(XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
-            self.hangupButton.selected  =YES;
+            self.hangupButton.frame =
+            CGRectMake((self.view.frame.size.width - LSWMCallButtonLength) / 2,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.hangupButton];
             self.hangupButton.hidden = NO;
             
             self.acceptButton.hidden = YES;
         } else if (callStatus == XLCallIncoming || callStatus == XLCallRinging) {
-            [self.hangupButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-XLCallVerticalMargin);
-                make.left.mas_equalTo(XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
-            self.hangupButton.selected  =YES;
+            self.hangupButton.frame = CGRectMake(
+                                                 LSWMCallHorizontalMargin, self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength,
+                                                 LSWMCallButtonLength, LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.hangupButton];
             self.hangupButton.hidden = NO;
             
-            [self.acceptButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.hangupButton.mas_bottom);
-                make.right.mas_equalTo(-XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
+            self.acceptButton.frame =
+            CGRectMake(self.view.frame.size.width - LSWMCallHorizontalMargin - LSWMCallButtonLength,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.acceptButton];
             self.acceptButton.hidden = NO;
         } else if (callStatus == XLCallActive) {
-            [self.hangupButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-XLCallVerticalMargin);
-                make.left.mas_equalTo(XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
+            self.hangupButton.frame =
+            CGRectMake((self.view.frame.size.width - LSWMCallButtonLength) / 2,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.hangupButton];
             self.hangupButton.hidden = NO;
             
@@ -376,11 +343,10 @@
         }
         
         if (callStatus == XLCallActive) {
-            [self.cameraCloseButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.hangupButton.mas_bottom);
-                make.right.mas_equalTo(-XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
+            self.cameraSwitchButton.frame =
+            CGRectMake(self.view.frame.size.width - LSWMCallHorizontalMargin - LSWMCallButtonLength,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.cameraSwitchButton];
             self.cameraSwitchButton.hidden = NO;
         } else if (callStatus != XLCallHangup) {
@@ -388,84 +354,248 @@
         }
         
         if (callStatus == XLCallActive) {
-            [self.cameraCloseButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.hangupButton.mas_bottom);
-                make.right.mas_equalTo(-XLCallHorizontalMargin);
-                make.size.mas_equalTo(CGSizeMake(XLCallButtonLength, XLCallButtonLength));
-            }];
+            self.cameraCloseButton.frame = CGRectMake(
+                                                      self.view.frame.size.width - LSWMCallHorizontalMargin - LSWMCallButtonLength,
+                                                      self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength * 2 - LSWMCallInsideMargin * 5,
+                                                      LSWMCallButtonLength, LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.cameraCloseButton];
+            self.cameraCloseButton.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.cameraCloseButton.hidden = YES;
+        }
+        
+    } else if (mediaType == XLCallMediaAudio && isMultiCall) {
+        self.backgroundView.backgroundColor = UIColorFromRGB(0x262e42);
+        self.backgroundView.hidden = NO;
+        
+        self.blurView.hidden = NO;
+        
+        if (callStatus == XLCallActive) {
+            self.minimizeButton.frame = CGRectMake(LSWMCallHorizontalMargin / 2, LSWMCallVerticalMargin,
+                                                   LSWMCallButtonLength / 2, LSWMCallButtonLength / 2);
+            self.minimizeButton.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.minimizeButton.hidden = YES;
+        }
+        
+        if (callStatus == XLCallActive) {
+            self.inviteUserButton.frame =
+            CGRectMake(self.view.frame.size.width - LSWMCallHorizontalMargin / 2 - LSWMCallButtonLength / 2,
+                       LSWMCallVerticalMargin, LSWMCallButtonLength / 2, LSWMCallButtonLength / 2);
+            self.inviteUserButton.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.inviteUserButton.hidden = YES;
+        }
+        
+        if (callStatus == XLCallActive) {
+            self.timeLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin, LSWMCallVerticalMargin,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+            self.timeLabel.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.timeLabel.hidden = YES;
+        }
+        
+        // header orgin y = LSWMCallVerticalMargin * 2
+        if (callStatus == XLCallIncoming || callStatus == XLCallRinging) {
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin,
+                       LSWMCallVerticalMargin * 2 + LSWMCallHeaderLength + LSWMCallInsideMargin * 2 + LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+        } else if (callStatus == XLCallDialing) {
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin, LSWMCallVerticalMargin,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+        } else {
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength -
+                       LSWMCallInsideMargin * 3 - LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+        }
+        self.tipsLabel.hidden = NO;
+        
+        if (callStatus == XLCallActive) {
+            self.muteButton.frame = CGRectMake(LSWMCallHorizontalMargin,
+                                               self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength,
+                                               LSWMCallButtonLength, LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.muteButton];
+            self.muteButton.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.muteButton.hidden = YES;
+        }
+        
+        if (callStatus == XLCallActive) {
+            self.speakerButton.frame =
+            CGRectMake(self.view.frame.size.width - LSWMCallHorizontalMargin - LSWMCallButtonLength,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.speakerButton];
+            self.speakerButton.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.speakerButton.hidden = YES;
+        }
+        
+        if (callStatus == XLCallDialing) {
+            self.hangupButton.frame =
+            CGRectMake((self.view.frame.size.width - LSWMCallButtonLength) / 2,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.hangupButton];
+            self.hangupButton.hidden = NO;
+            
+            self.acceptButton.hidden = YES;
+        } else if (callStatus == XLCallIncoming || callStatus == XLCallRinging) {
+            self.hangupButton.frame = CGRectMake(
+                                                 LSWMCallHorizontalMargin, self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength,
+                                                 LSWMCallButtonLength, LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.hangupButton];
+            self.hangupButton.hidden = NO;
+            
+            self.acceptButton.frame =
+            CGRectMake(self.view.frame.size.width - LSWMCallHorizontalMargin - LSWMCallButtonLength,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.acceptButton];
+            self.acceptButton.hidden = NO;
+        } else if (callStatus == XLCallActive) {
+            self.hangupButton.frame =
+            CGRectMake((self.view.frame.size.width - LSWMCallButtonLength) / 2,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.hangupButton];
+            self.hangupButton.hidden = NO;
+            
+            self.acceptButton.hidden = YES;
+        }
+        
+        self.cameraCloseButton.hidden = YES;
+        self.cameraSwitchButton.hidden = YES;
+        
+    } else if (mediaType == XLCallMediaVideo && isMultiCall) {
+        self.backgroundView.hidden = NO;
+        
+        self.blurView.hidden = YES;
+        
+        if (callStatus == XLCallActive) {
+            self.minimizeButton.frame = CGRectMake(LSWMCallHorizontalMargin / 2, LSWMCallVerticalMargin,
+                                                   LSWMCallButtonLength / 2, LSWMCallButtonLength / 2);
+            self.minimizeButton.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.minimizeButton.hidden = YES;
+        }
+        
+        if (callStatus == XLCallActive) {
+            self.cameraSwitchButton.frame = CGRectMake(
+                                                       self.view.frame.size.width - LSWMCallHorizontalMargin / 2 - LSWMCallButtonLength - LSWMCallInsideMargin,
+                                                       LSWMCallVerticalMargin, LSWMCallButtonLength / 2, LSWMCallButtonLength / 2);
+            self.cameraSwitchButton.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.cameraSwitchButton.hidden = YES;
+        }
+        
+        if (callStatus == XLCallActive) {
+            self.inviteUserButton.frame =
+            CGRectMake(self.view.frame.size.width - LSWMCallHorizontalMargin / 2 - LSWMCallButtonLength / 2,
+                       LSWMCallVerticalMargin, LSWMCallButtonLength / 2, LSWMCallButtonLength / 2);
+            self.inviteUserButton.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.inviteUserButton.hidden = YES;
+        }
+        
+        if (callStatus == XLCallActive) {
+            self.timeLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin, LSWMCallVerticalMargin + LSWMCallInsideMargin + LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+            self.timeLabel.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.timeLabel.hidden = YES;
+        }
+        
+        if (callStatus == XLCallIncoming || callStatus == XLCallRinging) {
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin,
+                       LSWMCallVerticalMargin * 2 + LSWMCallHeaderLength + LSWMCallInsideMargin * 2 + LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+        } else if (callStatus == XLCallDialing) {
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin, LSWMCallVerticalMargin,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+        } else {
+            self.tipsLabel.frame =
+            CGRectMake(LSWMCallHorizontalMargin,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength * 3.5 -
+                       LSWMCallInsideMargin * 5 - LSWMCallLabelHeight,
+                       self.view.frame.size.width - LSWMCallHorizontalMargin * 2, LSWMCallLabelHeight);
+        }
+        self.tipsLabel.hidden = NO;
+        
+        if (callStatus == XLCallActive) {
+            self.muteButton.frame = CGRectMake(LSWMCallHorizontalMargin,
+                                               self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength,
+                                               LSWMCallButtonLength, LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.muteButton];
+            self.muteButton.hidden = NO;
+        } else if (callStatus != XLCallHangup) {
+            self.muteButton.hidden = YES;
+        }
+        
+        self.speakerButton.hidden = YES;
+        
+        if (callStatus == XLCallDialing) {
+            self.hangupButton.frame =
+            CGRectMake((self.view.frame.size.width - LSWMCallButtonLength) / 2,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.hangupButton];
+            self.hangupButton.hidden = NO;
+            
+            self.acceptButton.hidden = YES;
+        } else if (callStatus == XLCallIncoming || callStatus == XLCallRinging) {
+            self.hangupButton.frame = CGRectMake(
+                                                 LSWMCallHorizontalMargin, self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength,
+                                                 LSWMCallButtonLength, LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.hangupButton];
+            self.hangupButton.hidden = NO;
+            
+            self.acceptButton.frame =
+            CGRectMake(self.view.frame.size.width - LSWMCallHorizontalMargin - LSWMCallButtonLength,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.acceptButton];
+            self.acceptButton.hidden = NO;
+        } else if (callStatus == XLCallActive) {
+            self.hangupButton.frame =
+            CGRectMake((self.view.frame.size.width - LSWMCallButtonLength) / 2,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
+            [self layoutTextUnderImageButton:self.hangupButton];
+            self.hangupButton.hidden = NO;
+            
+            self.acceptButton.hidden = YES;
+        }
+        
+        if (callStatus == XLCallActive) {
+            self.cameraCloseButton.frame =
+            CGRectMake(self.view.frame.size.width - LSWMCallHorizontalMargin - LSWMCallButtonLength,
+                       self.view.frame.size.height - LSWMCallVerticalMargin - LSWMCallButtonLength, LSWMCallButtonLength,
+                       LSWMCallButtonLength);
             [self layoutTextUnderImageButton:self.cameraCloseButton];
             self.cameraCloseButton.hidden = NO;
         } else if (callStatus != XLCallHangup) {
             self.cameraCloseButton.hidden = YES;
         }
     }
-    
 }
 
--(void)callDidDisconnect{
-    
-    
-}
-/*!
- 点击最小化Button的回调
- */
-- (void)didTapMinimizeButton{
-    
-}
-/*!
- 点击加人Button的回调
- */
-- (void)didTapInviteUserButton{
-    
-}
-/*!
- 点击接听Button的回调
- */
-- (void)didTapAcceptButton{
-    
-}
-
-/*!
- 点击挂断Button的回调
- */
-- (void)didTapHangupButton{
-    
-}
-
-/*!
- 点击扬声器Button的回调
- */
-- (void)didTapSpeakerButton{
-    
-}
-/*!
- 点击静音Button的回调
- */
-- (void)didTapMuteButton{
-    
-}
-
-/*!
- 点击开启、关闭摄像头Button的回调
- */
-- (void)didTapCameraCloseButton{
-    
-}
-
-/*!
- 点击切换前后摄像头Button的回调
- */
-- (void)didTapCameraSwitchButton{
-    
-}
 #pragma mark PrivateFunciton
 - (void)layoutTextUnderImageButton:(UIButton *)button {
     [button.titleLabel setFont:[UIFont systemFontOfSize:12]];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     button.titleEdgeInsets = UIEdgeInsetsMake(0, -button.imageView.frame.size.width,
-                                              -button.imageView.frame.size.height - XLCallInsideMargin, 0);
-    button.imageEdgeInsets = UIEdgeInsetsMake(-button.titleLabel.intrinsicContentSize.height - XLCallInsideMargin, 0, 0,
+                                              -button.imageView.frame.size.height - LSWMCallInsideMargin, 0);
+    button.imageEdgeInsets = UIEdgeInsetsMake(-button.titleLabel.intrinsicContentSize.height - LSWMCallInsideMargin, 0, 0,
                                               -button.titleLabel.intrinsicContentSize.width);
 }
 - (void)registerTelephonyEvent {
@@ -597,31 +727,7 @@
 - (void)updateActiveTimer {
     self.timeLabel.text = [XLCallVideoUtility getTalkTimeStringForTime:100000];
 }
-#pragma TargetAction
--(void)cameraCloseButtonClicked{
-    
-    
-}
-- (void)hangupButtonClicked {
-    
-}
 
-- (void)acceptButtonClicked {
-    
-}
-// 扬声器
-- (void)speakerButtonClicked {
-    
-}
-//静音
-- (void)muteButtonClicked {
-    
-}
-//最小
--(void)minimizeButtonClicked{
-    
-    
-}
 
 - (UIButton *)minimizeButton {
     if (!_minimizeButton) {
@@ -769,8 +875,94 @@
     return _cameraCloseButton;
 }
 
--(void)dealloc{
-    NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
+
+
+#pragma TargetAction
+-(void)cameraCloseButtonClicked{
+    
+    
+}
+- (void)hangupButtonClicked {
+    
+}
+
+- (void)acceptButtonClicked {
+    
+}
+// 扬声器
+- (void)speakerButtonClicked {
+    
+}
+//静音
+- (void)muteButtonClicked {
+    
+}
+//最小
+-(void)minimizeButtonClicked{
+    
+    
+}
+
+
+
+
+
+#pragma mark - outside callback
+-(void)callDidDisconnect{
+    
+    
+}
+/*!
+ 点击最小化Button的回调
+ */
+- (void)didTapMinimizeButton{
+    
+}
+/*!
+ 点击加人Button的回调
+ */
+- (void)didTapInviteUserButton{
+    
+}
+/*!
+ 点击接听Button的回调
+ */
+- (void)didTapAcceptButton{
+    
+}
+
+/*!
+ 点击挂断Button的回调
+ */
+- (void)didTapHangupButton{
+    
+}
+
+/*!
+ 点击扬声器Button的回调
+ */
+- (void)didTapSpeakerButton{
+    
+}
+/*!
+ 点击静音Button的回调
+ */
+- (void)didTapMuteButton{
+    
+}
+
+/*!
+ 点击开启、关闭摄像头Button的回调
+ */
+- (void)didTapCameraCloseButton{
+    
+}
+
+/*!
+ 点击切换前后摄像头Button的回调
+ */
+- (void)didTapCameraSwitchButton{
+    
 }
 @end
 

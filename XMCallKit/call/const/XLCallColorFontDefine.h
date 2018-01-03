@@ -25,11 +25,13 @@
 #define LSSCALHEIGHT (SCREEN_HEIGHT/667.0)
 #define Number(num)                      (num*LSSCALWIDTH)
 #define NumberHeight(num)                (num*LSSCALHEIGHT)
-#define XLCallButtonLength Number(64.0f)
-#define XLCallLabelHeight NumberHeight(25.0f)
-#define XLCallVerticalMargin NumberHeight(67.0f)
-#define XLCallHorizontalMargin Number(37.0f)
-#define XLCallInsideMargin Number(5.0f)
-#define XLCallPaddingMargin Number(20.0f)
+
+#define LSWMCallHeaderLength Number(80.0f)
+#define LSWMCallButtonLength Number(64.0f)
+#define LSWMCallLabelHeight NumberHeight(25.0f)
+#define LSWMCallVerticalMargin NumberHeight(32.0f)
+#define LSWMCallHorizontalMargin Number(25.0f)
+#define LSWMCallInsideMargin Number(5.0f)
+
 
 #endif /* XLCallColorFontDefine_h */

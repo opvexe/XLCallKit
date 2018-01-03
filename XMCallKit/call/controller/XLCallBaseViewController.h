@@ -94,12 +94,14 @@
 
 /*!
  重新Layout布局
+ 
+ @param isMultiCall      是否多方通话
  @param mediaType        通话媒体类型
  @param callStatus       通话状态
  
  @discussion 如果您需要重写并调整UI的布局，应该先调用super。
  */
-- (void)resetLayoutWithMediaType:(XLCallMediaType )mediaType callStatus:(XLCallStatus )callStatus;
+- (void)resetLayout:(BOOL)isMultiCall mediaType:(XLCallMediaType)mediaType callStatus:(XLCallStatus)callStatus;
 
 
 #pragma mark  < 发起通话 >

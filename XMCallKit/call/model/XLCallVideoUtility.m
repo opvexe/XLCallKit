@@ -29,4 +29,8 @@
     [UIApplication sharedApplication].idleTimerDisabled = oldStatus;
 }
 
++ (BOOL)isLandscape {
+    CGRect screenBounds = [UIScreen mainScreen].bounds;
+    return screenBounds.size.width > screenBounds.size.height;
+}
 @end

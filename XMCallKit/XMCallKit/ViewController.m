@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "XLCall.h"
+
 @interface ViewController ()
 @end
 
@@ -15,6 +17,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    [[XLCall sharedXLCall] startSingleCall:@"1" mediaType:XLCallMediaAudio];
 }
 
 

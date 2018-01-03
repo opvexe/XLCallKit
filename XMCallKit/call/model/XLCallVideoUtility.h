@@ -22,4 +22,5 @@
  */
 + (void)clearCallIdleTimerDisableds;
 
++ (BOOL)isLandscape;
 @end
