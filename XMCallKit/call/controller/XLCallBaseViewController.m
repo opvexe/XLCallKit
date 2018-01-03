@@ -19,14 +19,15 @@
 @implementation XLCallBaseViewController
 
 /**
- * 获取会话对象，类型
- 
- @return return value description
+ * 获取会话对象
  */
 - (NSString *)targetId {
     return self.callSession.targetId;
 }
 
+/**
+ * 获取会话类型
+ */
 - (XLCallMediaType)mediaType {
     return self.callSession.mediaType;
 }
@@ -50,7 +51,6 @@
     }
     return self;
 }
-
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -80,6 +80,10 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:NO];
 }
 
+- (void)onOrientationChanged:(NSNotification *)notification {
+    [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:self.callSession.callStatus];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     if (self.callSession.callStatus == XLCallActive) {
@@ -104,29 +108,7 @@
     [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:4];
 }
 
-- (void)onOrientationChanged:(NSNotification *)notification {
-    [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:self.callSession.callStatus];
-}
-
 #pragma mark ===========================================    <PrivateFunciton>  ===========================================
-- (void)layoutTextUnderImageButton:(UIButton *)button {
-    [button.titleLabel setFont:[UIFont systemFontOfSize:12]];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    button.titleEdgeInsets = UIEdgeInsetsMake(0, -button.imageView.frame.size.width,
-                                              -button.imageView.frame.size.height - LSWMCallInsideMargin, 0);
-    button.imageEdgeInsets = UIEdgeInsetsMake(-button.titleLabel.intrinsicContentSize.height - LSWMCallInsideMargin, 0, 0,
-                                              -button.titleLabel.intrinsicContentSize.width);
-}
-- (void)registerTelephonyEvent {
-    self.callCenter = [[CTCallCenter alloc] init];
-    __weak __typeof(self) weakSelf = self;
-    self.callCenter.callEventHandler = ^(CTCall *call) {
-        if ([call.callState isEqualToString:CTCallStateConnected]) {
-            [weakSelf.callSession hangup];
-        }
-    };
-}
 
 - (void)addProximityMonitoringObserver {
     [UIDevice currentDevice].proximityMonitoringEnabled = YES;
@@ -150,53 +132,6 @@
     } else {
         [[AVAudioSession sharedInstance]
          setCategory:AVAudioSessionCategoryPlayback error:nil];
-    }
-}
-
-- (void)registerForegroundNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-}
-
-- (void)appDidBecomeActive {
-    if (self.needPlayingAlertAfterForeground) {
-        [self shouldAlertForWaitingRemoteResponse];
-    } else if (self.needPlayingRingAfterForeground) {
-        [self shouldRingForIncomingCall];
-    }
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)startPlayRing:(NSString *)ringPath {
-    if (ringPath) {
-        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        //默认情况下扬声器播放
-        [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
-        [audioSession setActive:YES error:nil];
-        
-        if (self.audioPlayer) {
-            [self stopPlayRing];
-        }
-        
-        NSURL *url = [NSURL URLWithString:ringPath];
-        NSError *error = nil;
-        self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
-        if (!error) {
-            self.audioPlayer.numberOfLoops = -1;
-            self.audioPlayer.volume = 1.0;
-            [self.audioPlayer prepareToPlay];
-            [self.audioPlayer play];
-        }
-    }
-}
-
-
-- (void)stopPlayRing {
-    if (self.audioPlayer) {
-        [self.audioPlayer stop];
-        self.audioPlayer = nil;
     }
 }
 
@@ -654,25 +589,16 @@
     }
 }
 
-#pragma mark  =========================================         <定时器开始计时>              =========================================================
-- (void)startActiveTimer {
-    self.activeTimer = [NSTimer scheduledTimerWithTimeInterval:1
-                                                        target:self
-                                                      selector:@selector(updateActiveTimer)
-                                                      userInfo:nil
-                                                       repeats:YES];
-    [self.activeTimer fire];
+///MARK: 重新布局button
+- (void)layoutTextUnderImageButton:(UIButton *)button {
+    [button.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    button.titleEdgeInsets = UIEdgeInsetsMake(0, -button.imageView.frame.size.width,
+                                              -button.imageView.frame.size.height - LSWMCallInsideMargin, 0);
+    button.imageEdgeInsets = UIEdgeInsetsMake(-button.titleLabel.intrinsicContentSize.height - LSWMCallInsideMargin, 0, 0,
+                                              -button.titleLabel.intrinsicContentSize.width);
 }
-- (void)stopActiveTimer {
-    if (self.activeTimer) {
-        [self.activeTimer invalidate];
-        self.activeTimer = nil;
-    }
-}
-- (void)updateActiveTimer {
-    self.timeLabel.text = [XLCallVideoUtility getTalkTimeStringForTime:100000];
-}
-
 #pragma mark  ===========================================              <懒加载控件>              ========================================================
 - (UIButton *)minimizeButton {
     if (!_minimizeButton) {
@@ -723,7 +649,6 @@
         _timeLabel.textColor = [UIColor whiteColor];
         _timeLabel.font = [UIFont systemFontOfSize:18];
         _timeLabel.textAlignment = NSTextAlignmentCenter;
-        _timeLabel.text = @"1000秒";
         [self.view addSubview:_timeLabel];
         _timeLabel.hidden = YES;
     }
@@ -736,7 +661,6 @@
         _tipsLabel.textColor = [UIColor whiteColor];
         _tipsLabel.font = [UIFont systemFontOfSize:18];
         _tipsLabel.textAlignment = NSTextAlignmentCenter;
-        _tipsLabel.text = @"网络异常";
         [self.view addSubview:_tipsLabel];
         _tipsLabel.hidden = YES;
     }
@@ -892,6 +816,103 @@
     }
     return _cameraSwitchButton;
 }
+
+#pragma mark   =====================================            <注册通知>                  ===============================
+- (void)registerForegroundNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (void)appDidBecomeActive {
+    if (self.needPlayingAlertAfterForeground) {
+        [self shouldAlertForWaitingRemoteResponse];
+    } else if (self.needPlayingRingAfterForeground) {
+        [self shouldRingForIncomingCall];
+    }
+}
+
+#pragma mark  =========================================         <定时器开始计时&&响铃=操作>              =========================================================
+
+/*!
+ 电话接听事件
+ */
+- (void)registerTelephonyEvent {
+    self.callCenter = [[CTCallCenter alloc] init];
+    __weak __typeof(self) weakSelf = self;
+    self.callCenter.callEventHandler = ^(CTCall *call) {
+        if ([call.callState isEqualToString:CTCallStateConnected]) {
+            [weakSelf.callSession hangup];
+        }
+    };
+}
+
+/*!
+ 开始响铃
+ */
+- (void)startPlayRing:(NSString *)ringPath {
+    if (ringPath) {
+        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+        //默认情况下扬声器播放
+        [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+        [audioSession setActive:YES error:nil];
+        
+        if (self.audioPlayer) {
+            [self stopPlayRing];
+        }
+        
+        NSURL *url = [NSURL URLWithString:ringPath];
+        NSError *error = nil;
+        self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+        if (!error) {
+            self.audioPlayer.numberOfLoops = -1;
+            self.audioPlayer.volume = 1.0;
+            [self.audioPlayer prepareToPlay];
+            [self.audioPlayer play];
+        }
+    }
+}
+
+/*!
+ 结束响铃
+ */
+- (void)stopPlayRing {
+    if (self.audioPlayer) {
+        [self.audioPlayer stop];
+        self.audioPlayer = nil;
+        //设置铃声停止后恢复其他app的声音
+        [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
+                                             error:nil];
+    }
+}
+
+/*!
+ 开启定时器
+ */
+- (void)startActiveTimer {
+    self.activeTimer = [NSTimer scheduledTimerWithTimeInterval:1
+                                                        target:self
+                                                      selector:@selector(updateActiveTimer)
+                                                      userInfo:nil
+                                                       repeats:YES];
+    [self.activeTimer fire];
+}
+
+/*!
+ 结束定时器
+ */
+- (void)stopActiveTimer {
+    if (self.activeTimer) {
+        [self.activeTimer invalidate];
+        self.activeTimer = nil;
+    }
+}
+
+/*!
+ 通话时间
+ */
+- (void)updateActiveTimer {
+    self.timeLabel.text = [XLCallVideoUtility getTalkTimeStringForTime:100000];
+}
+
 
 #pragma mark  ================================================       <XLCallSessionDelegate>               ================================================
 
@@ -1194,5 +1215,14 @@
 - (void)didTapCameraSwitchButton{
     
 }
+
+
+
+#pragma mark   dealloc
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
 @end
 
