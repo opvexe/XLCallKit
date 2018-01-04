@@ -304,6 +304,7 @@
 		D00C86471FECDB1A001AA4D3 /* call */ = {
 			isa = PBXGroup;
 			children = (
+				D02977AC1FFDF3F8001C1C87 /* view */,
 				D00A7B251FFCBF0A0026CCAE /* userInfo */,
 				D0115AEA1FF37DB5009756E9 /* key */,
 				D0115ADA1FF3687E009756E9 /* vendor */,
@@ -462,6 +463,13 @@
 				D06F4DEB1FF39FC000A987DD /* XLEncryptionType.m */,
 			);
 			path = key;
+			sourceTree = "<group>";
+		};
+		D02977AC1FFDF3F8001C1C87 /* view */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = view;
 			sourceTree = "<group>";
 		};
 		E88524F5866446AFE639B842 /* Frameworks */ = {
