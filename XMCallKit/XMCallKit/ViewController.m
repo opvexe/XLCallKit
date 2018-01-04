@@ -19,7 +19,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor =  UIColorFromRGB(0x262e42);
     
-    [[XLCall sharedXLCall] startSingleCall:@"33" mediaType:XLCallMediaVideo];
+    [[XLCall sharedXLCall] startSingleCall:@"1" mediaType:XLCallMediaAudio];
 }
 
 

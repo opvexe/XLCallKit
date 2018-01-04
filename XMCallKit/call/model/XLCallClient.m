@@ -10,7 +10,6 @@
 #import "XLCertificateToken.h"
 
 @interface XLCallClient()
-@property(nonatomic,strong)AgoraAPI *callAgoraApi;
 @property(nonatomic, strong)XLCallSession *currentCallSession;
 @property (nonatomic,weak)id<XLCallReceiveDelegate>delegate;
 @property(nonatomic,copy)NSString *userID;
@@ -50,7 +49,7 @@
     
     WS(weakSelf)
     self.callAgoraApi.onLoginSuccess = ^(uint32_t uid, int fd) {        ///登录成功回调
-        NSLog(@"AgoraAPI:login successfully");
+        NSLog(@"信令:login successfully");
     };
     
     self.callAgoraApi.onLog = ^(NSString *txt) {      ///信令日志

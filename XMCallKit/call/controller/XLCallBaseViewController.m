@@ -108,7 +108,7 @@
         [self callDidDisconnect];
     }
     
-    [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:4];
+    [self resetLayout:self.callSession.isMultiCall mediaType:self.callSession.mediaType callStatus:self.callSession.callStatus];
 }
 
 #pragma mark ===========================================    <PrivateFunciton>  ===========================================

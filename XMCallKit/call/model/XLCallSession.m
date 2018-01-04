@@ -21,7 +21,7 @@ static NSInteger streamID = 0;
 
 -(void)initWithRoomID:(NSString  *)roomID{          ///音频
     self.agoraKit = [AgoraRtcEngineKit sharedEngineWithAppId:AgoraAppID delegate:self];
-    [self.agoraKit joinChannelByKey:nil channelName:roomID info:nil uid:[_userId integerValue] joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
+    [self.agoraKit joinChannelByKey:nil channelName:roomID info:nil uid:0 joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
         NSLog(@"进入音视频道成功");
     }];
 }
@@ -34,7 +34,7 @@ static NSInteger streamID = 0;
     [self.agoraKit setEncryptionSecret:AgoraEncrypSecret];
     [self.agoraKit createDataStream:&streamID reliable:YES ordered:YES];
     [self.agoraKit startPreview];
-    [self.agoraKit joinChannelByKey:nil channelName:roomID info:nil uid:[_userId integerValue] joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
+    [self.agoraKit joinChannelByKey:nil channelName:roomID info:nil uid:0 joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
         NSLog(@"进入视频道成功");
     }];
 }

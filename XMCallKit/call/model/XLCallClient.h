@@ -24,7 +24,7 @@
  设置信令
  
  */
-@property(nonatomic,readonly,strong)AgoraAPI *callAgoraApi;
+@property(nonatomic,strong)AgoraAPI *callAgoraApi;
 
 /*!
  设置全局通话呼入的监听器
