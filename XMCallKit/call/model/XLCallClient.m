@@ -213,7 +213,7 @@
     model.targetId = targetId;
     model.userProfileList = userIdList;
     model.mediaType = type;
-    [model setDelegate:delegate];
+//    [model setDelegate:delegate];
     return model;
 }
 

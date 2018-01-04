@@ -7,6 +7,7 @@
 //
 
 #import "XLCallBaseViewController.h"
+#import "XLCallFloatingBoard.h"
 
 @interface XLCallBaseViewController ()
 @property(nonatomic, strong) NSTimer *activeTimer;
@@ -638,10 +639,6 @@
     return _inviteUserButton;
 }
 
-- (void)inviteUserButtonClicked {
-    [self didTapInviteUserButton];
-}
-
 - (UILabel *)timeLabel {
     if (!_timeLabel) {
         _timeLabel = [[UILabel alloc] init];
@@ -910,7 +907,8 @@
  通话时间
  */
 - (void)updateActiveTimer {
-    self.timeLabel.text = [XLCallVideoUtility getTalkTimeStringForTime:100000];
+     long sec = [[NSDate date] timeIntervalSince1970] - self.callSession.connectedTime / 1000;
+    self.timeLabel.text = [XLCallVideoUtility getTalkTimeStringForTime:sec];
 }
 
 
@@ -1112,49 +1110,102 @@
 }
 
 #pragma mark  ======================================   <Button点击事件>       ================================
+
+/*!
+ 邀请用户加入
+ */
+- (void)inviteUserButtonClicked {
+    [self didTapInviteUserButton];
+}
+
 /*!
  摄像头前置后置
  */
 -(void)cameraSwitchButtonClicked{
+    [self didTapCameraSwitchButton];
+    [self.callSession switchCameraMode];
 }
 
 /*!
  开启关闭摄像头
  */
 -(void)cameraCloseButtonClicked{
+    [self didTapCameraCloseButton];
+    if (!self.callSession.isMultiCall) {
+        [self.callSession setVideoView:nil userId:[[XLUserInfoCacheManager getUser]userId]];
+        [self.callSession setVideoView:nil userId:self.callSession.targetId];
+        
+        if (self.callSession.callStatus == XLCallIncoming || self.callSession.callStatus == XLCallRinging) {
+            [self.callSession accept:XLCallMediaAudio];
+        }
+        
+        if ([self.callSession changeMediaType:XLCallMediaAudio]) {
+            [self resetLayout:self.callSession.isMultiCall
+                    mediaType:XLCallMediaAudio
+                   callStatus:self.callSession.callStatus];
+        }
+    } else {
+        [self.callSession setCameraEnabled:!self.callSession.cameraEnabled];
+        [self.cameraCloseButton setSelected:!self.callSession.cameraEnabled];
+    }
 }
 
 /*!
  挂断
  */
 - (void)hangupButtonClicked {
+    [self didTapHangupButton];
+    if (!self.callSession) {
+        [self callDidDisconnect];
+    } else {
+        [self.callSession hangup];
+    }
 }
 
 /*!
  接听
  */
 - (void)acceptButtonClicked {
+    [self didTapAcceptButton];
+    if (!self.callSession) {
+        [self callDidDisconnect];
+    } else {
+        [self.callSession accept:self.callSession.mediaType];
+    }
 }
 
 /*!
  扬声器
  */
 - (void)speakerButtonClicked {
-    
+    [self didTapSpeakerButton];
+    [self.callSession setSpeakerEnabled:!self.callSession.speakerEnabled];
+    [self.speakerButton setSelected:self.callSession.speakerEnabled];
 }
 
 /*!
  静音
  */
 - (void)muteButtonClicked {
-    
+    [self didTapMuteButton];
+    [self.callSession setMuted:!self.callSession.isMuted];
+    [self.muteButton setSelected:self.callSession.isMuted];
 }
 
 /*!
  最小化
  */
 -(void)minimizeButtonClicked{
-    
+    [self didTapMinimizeButton];
+    Class selfClass = [self class];
+    [XLCallFloatingBoard
+     startCallFloatingBoard:self.callSession
+     withTouchedBlock:^(XLCallSession *callSession) {
+         [[XLCall sharedXLCall]presentCallViewController:[[selfClass alloc] initWithIncomingCall:callSession]];
+         
+     }];
+    [self stopActiveTimer];
+    [[XLCall sharedXLCall] dismissCallViewController:self];
 }
 
 /*
@@ -1216,11 +1267,11 @@
     
 }
 
+#pragma mark  ==================================  < dealloc >   ========================================
 
-
-#pragma mark   dealloc
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    NSLog(@"dealloc:%s",__func__);
 }
 
 

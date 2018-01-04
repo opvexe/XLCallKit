@@ -18,7 +18,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    [[XLCall sharedXLCall] startSingleCall:@"33" mediaType:XLCallMediaAudio];
+    [[XLCall sharedXLCall] startSingleCall:@"33" mediaType:XLCallMediaVideo];
 }
 
 

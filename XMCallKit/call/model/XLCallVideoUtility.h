@@ -22,7 +22,6 @@
  */
 + (void)clearCallIdleTimerDisableds;
 
-
 /**
  * 挂断原因回调
 
@@ -32,4 +31,6 @@
 + (NSString *)getReadableStringForCallViewController:(XLCallDisconnectReason)hangupReason;
 
 + (BOOL)isLandscape;
++ (void)setScreenForceOn;
++ (void)clearScreenForceOnStatus;
 @end
