@@ -85,10 +85,6 @@
     return _subVideoView;
 }
 
--(void)subVideoViewClicked{
-    
-}
-
 
 - (void)resetLayout:(BOOL)isMultiCall mediaType:(XLCallMediaType)mediaType callStatus:(XLCallStatus)callStatus{
     [super resetLayout:isMultiCall mediaType:mediaType callStatus:callStatus];
@@ -206,6 +202,12 @@
 }
 
 - (void)resetRemoteUserInfoIfNeed {
+    
+}
+
+
+
+-(void)subVideoViewClicked{
     
 }
 @end

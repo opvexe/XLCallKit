@@ -139,7 +139,7 @@ static NSInteger streamID = 0;
  @param delegate 通话状态变化的监听器
  */
 - (void)setDelegate:(id<XLCallSessionDelegate>)delegate{
-    self.delegate = delegate;
+//    self.delegate = delegate;
 }
 
 

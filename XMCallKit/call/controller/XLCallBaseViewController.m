@@ -40,6 +40,7 @@
         _callSession = callSession;
         [self registerForegroundNotification];
         [_callSession setDelegate:self];
+        [XLCallVideoUtility setScreenForceOn];
     }
     return self;
 }
@@ -49,6 +50,7 @@
     if (self) {
         _callSession = [[XLCallClient sharedXLCallClient]startTargetId:targetId to:userIdList mediaType:mediaType sessionDelegate:self];
         [self registerForegroundNotification];
+        [XLCallVideoUtility setScreenForceOn];
     }
     return self;
 }
@@ -907,7 +909,7 @@
  通话时间
  */
 - (void)updateActiveTimer {
-     long sec = [[NSDate date] timeIntervalSince1970] - self.callSession.connectedTime / 1000;
+    long sec = [[NSDate date] timeIntervalSince1970] - self.callSession.connectedTime / 1000;
     self.timeLabel.text = [XLCallVideoUtility getTalkTimeStringForTime:sec];
 }
 
