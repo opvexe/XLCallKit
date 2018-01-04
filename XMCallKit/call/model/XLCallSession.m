@@ -11,7 +11,7 @@
 #import "XLEncryptionType.h"
 @interface XLCallSession ()<AgoraRtcEngineDelegate>
 @property(nonatomic,strong)AgoraRtcEngineKit *agoraKit;
-@property(nonatomic,weak)id <XLCallSessionDelegate>delegate;
+@property (nonatomic,weak)id<XLCallSessionDelegate>delegate;
 @property(nonatomic,copy)NSString *userId;
 @property(nonatomic,strong)UIView *videoView;
 @end
@@ -139,7 +139,7 @@ static NSInteger streamID = 0;
  @param delegate 通话状态变化的监听器
  */
 - (void)setDelegate:(id<XLCallSessionDelegate>)delegate{
-//    self.delegate = delegate;
+    _delegate = delegate;
 }
 
 

@@ -24,6 +24,7 @@
     static XLCall *instance;
     dispatch_once(&onceToken, ^{
         instance = [[XLCall alloc] init];
+        [[XLCallClient sharedXLCallClient] setDelegate:instance];
         instance.maxMultiAudioCallUserNumber = 20;
         instance.maxMultiVideoCallUserNumber = 9;
         instance.callWindows = [[NSMutableArray alloc] init];
@@ -33,6 +34,12 @@
     return instance;
 }
 
+/*!
+ 当前的通话会话实体
+ */
+- (XLCallSession *)currentCallSession {
+    return [XLCallClient sharedXLCallClient].currentCallSession;
+}
 
 /*!
  发起单人通话(视频或语音)

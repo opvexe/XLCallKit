@@ -50,11 +50,11 @@
     
     WS(weakSelf)
     self.callAgoraApi.onLoginSuccess = ^(uint32_t uid, int fd) {        ///登录成功回调
-        NSLog(@"login successfully");
+        NSLog(@"AgoraAPI:login successfully");
     };
     
     self.callAgoraApi.onLog = ^(NSString *txt) {      ///信令日志
-        NSLog(@"__信令日志LOG__: %@", txt);
+//        NSLog(@"__信令日志__: %@", txt);
     };
     
     self.callAgoraApi.onLoginFailed = ^(AgoraEcode ecode) { ///登录失败回调
@@ -224,7 +224,7 @@
  @param delegate CallLib全局通话呼入的监听器
  */
 - (void)setDelegate:(id<XLCallReceiveDelegate>)delegate{
-    self.delegate  = delegate;
+    _delegate  = delegate;
 }
 
 /*!

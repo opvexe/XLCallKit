@@ -1239,7 +1239,7 @@
  点击挂断Button的回调
  */
 - (void)didTapHangupButton{
-    
+     [[XLCall sharedXLCall] dismissCallViewController:self];
 }
 
 /*

@@ -20,7 +20,7 @@
 
     XLUserInfo *user = [[XLUserInfo alloc]initWithUserId:@"1" name:@"min" portrait:@"portrait"];
     if ([XLUserInfoCacheManager saveUser:user]) {
-        NSLog(@"suceess");
+        NSLog(@"userInfo save suceess");
     }
     
     //登录信令
