@@ -68,6 +68,8 @@
 		D0115AE61FF370C5009756E9 /* NSString+LSWMEXtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D0115AE51FF370C5009756E9 /* NSString+LSWMEXtension.m */; };
 		D0115AE91FF37923009756E9 /* XLCall.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0115AE81FF37923009756E9 /* XLCall.mm */; };
 		D0115AF21FF37EAB009756E9 /* CallVideoKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0115AF11FF37EAB009756E9 /* CallVideoKey.mm */; };
+		D0208429200D95AE00549B23 /* NSObject+Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = D0208428200D95AE00549B23 /* NSObject+Tool.m */; };
+		D020842C200D95E800549B23 /* UIView+Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = D020842A200D95E700549B23 /* UIView+Tool.m */; };
 		D06F4DEC1FF39FC000A987DD /* XLEncryptionType.m in Sources */ = {isa = PBXBuildFile; fileRef = D06F4DEB1FF39FC000A987DD /* XLEncryptionType.m */; };
 /* End PBXBuildFile section */
 
@@ -188,6 +190,10 @@
 		D0115AEF1FF37E76009756E9 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		D0115AF01FF37EAB009756E9 /* CallVideoKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CallVideoKey.h; sourceTree = "<group>"; };
 		D0115AF11FF37EAB009756E9 /* CallVideoKey.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CallVideoKey.mm; sourceTree = "<group>"; };
+		D0208427200D95AE00549B23 /* NSObject+Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Tool.h"; sourceTree = "<group>"; };
+		D0208428200D95AE00549B23 /* NSObject+Tool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Tool.m"; sourceTree = "<group>"; };
+		D020842A200D95E700549B23 /* UIView+Tool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Tool.m"; sourceTree = "<group>"; };
+		D020842B200D95E700549B23 /* UIView+Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Tool.h"; sourceTree = "<group>"; };
 		D06F4DEA1FF39FC000A987DD /* XLEncryptionType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XLEncryptionType.h; sourceTree = "<group>"; };
 		D06F4DEB1FF39FC000A987DD /* XLEncryptionType.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XLEncryptionType.m; sourceTree = "<group>"; };
 		F804EE50568C992426261348 /* libPods-XMCallKitUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XMCallKitUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -354,6 +360,10 @@
 		D00C86551FECF3CA001AA4D3 /* category */ = {
 			isa = PBXGroup;
 			children = (
+				D020842B200D95E700549B23 /* UIView+Tool.h */,
+				D020842A200D95E700549B23 /* UIView+Tool.m */,
+				D0208427200D95AE00549B23 /* NSObject+Tool.h */,
+				D0208428200D95AE00549B23 /* NSObject+Tool.m */,
 				D0115AE41FF370C5009756E9 /* NSString+LSWMEXtension.h */,
 				D0115AE51FF370C5009756E9 /* NSString+LSWMEXtension.m */,
 				D00C86561FECF3E2001AA4D3 /* UIImage+Category.h */,
@@ -824,7 +834,9 @@
 				D0115AE61FF370C5009756E9 /* NSString+LSWMEXtension.m in Sources */,
 				D00C86171FECD74A001AA4D3 /* AppDelegate.m in Sources */,
 				D00C86581FECF3E2001AA4D3 /* UIImage+Category.m in Sources */,
+				D020842C200D95E800549B23 /* UIView+Tool.m in Sources */,
 				D00C86601FECFC1A001AA4D3 /* XLConst.m in Sources */,
+				D0208429200D95AE00549B23 /* NSObject+Tool.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
