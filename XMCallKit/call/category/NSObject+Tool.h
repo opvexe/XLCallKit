@@ -18,4 +18,10 @@
  */
 - (UIViewController *)currentViewController;
 
+/*！
+ * 点击通知获取对应的控制器
+ 
+ @return 通过控制器的布局视图可以获取到控制器实例对象    modal的展现方式需要取到控制器的根视图
+ */
+-(UIViewController *)getCurVC;
 @end
